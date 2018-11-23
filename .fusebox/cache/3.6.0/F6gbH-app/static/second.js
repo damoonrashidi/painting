@@ -1,9 +1,0 @@
-module.exports = { contents: "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst helpers_1 = require(\"./lib/helpers\");\nconst colors_1 = require(\"./lib/colors\");\nconst [WIDTH, HEIGHT] = [1200, 1600];\nlet ctx;\nconst paint = (config, i = 0) => {\n    const { points, colors, blur, opacity, distortion } = config;\n    const distorted = helpers_1.distort(points, distortion);\n    ctx.save();\n    ctx.setTransform(1, 0, 0, 1, 0, 0);\n    ctx.beginPath();\n    const point = helpers_1.middle(points[0], points[Math.round(points.length / 2)]);\n    ctx.translate(point[0] + 400, point[1] + 300);\n    ctx.rotate((helpers_1.random(-180, 180) * Math.PI) / 180);\n    ctx.translate(-point[0], -point[1]);\n    ctx.moveTo(distorted[0][0], distorted[0][1]);\n    for (let i = 0; i < distorted.length; i++) {\n        const [x, y] = distorted[i];\n        ctx.lineTo(x, y);\n    }\n    ctx.filter = `blur(${helpers_1.random(blur[0], blur[1])}px)`;\n    ctx.fillStyle = colors_1.randomHue(colors[0], colors[1], helpers_1.random(opacity[0], opacity[1], false));\n    ctx.fill();\n    ctx.closePath();\n    ctx.restore();\n    if (i < 100) {\n        requestAnimationFrame(() => paint({ points, colors, blur, opacity, distortion }, i + 1));\n    }\n};\nsetTimeout(() => {\n    ctx = helpers_1.init(WIDTH, HEIGHT);\n    ctx.fillStyle = '#fffee5';\n    ctx.fillRect(0, 0, WIDTH, HEIGHT);\n    ctx.globalCompositeOperation = 'darken';\n    const [w, h] = [WIDTH / 4, HEIGHT / 4];\n    const [x, y] = [200, 300];\n    paint({\n        points: [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]],\n        colors: [290, 360],\n        blur: [10, 40],\n        opacity: [0.01, 0.04],\n        distortion: 90,\n    });\n}, 0);\n//# sourceMappingURL=second.js.map",
-dependencies: ["./lib/helpers","./lib/colors"],
-sourceMap: {},
-headerContent: undefined,
-mtime: 1542986851517,
-devLibsRequired : undefined,
-ac : undefined,
-_ : {}
-}
