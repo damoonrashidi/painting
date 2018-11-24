@@ -1,12 +1,12 @@
-import { init } from './lib/helpers';
+import { init } from "./lib/helpers";
 const [WIDTH, HEIGHT] = [600, 800];
 let ctx: CanvasRenderingContext2D;
-import COLORS, { randomHue } from './lib/colors';
+import COLORS, { randomHue } from "./lib/colors";
 
 const paint = () => {
   drawBg();
-  circle('rgba(100,100,100,.9)');
-  pyramid('rgba(100,100,100,.9)');
+  circle("rgba(100,100,100,.9)");
+  pyramid("rgba(100,100,100,.9)");
   drawWater();
 };
 
@@ -37,7 +37,7 @@ const drawWater = () => {
       0.4})`;
     ctx.rotate(Math.PI * Math.random() * 10);
     drawShape([[0, 0], [0, 100], [0, 21]]);
-    ctx.filter = '';
+    ctx.filter = "";
   }
 };
 

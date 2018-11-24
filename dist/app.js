@@ -7,45 +7,62 @@ ___scope___.file("second.js", function(exports, require, module, __filename, __d
 Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = require("./lib/helpers");
 const colors_1 = require("./lib/colors");
-const [WIDTH, HEIGHT] = [1200, 1600];
+const [WIDTH, HEIGHT] = [600, 800];
 let ctx;
 const paint = (config, i = 0) => {
-    const { points, colors, blur, opacity, distortion } = config;
-    const distorted = helpers_1.distort(points, distortion);
+    const { points, colors, blur, opacity, distortion, layers } = config;
+    let distorted = helpers_1.distort(points, distortion);
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.beginPath();
+    randomlyRotateAroundCenter(points, distorted);
+    paintDistortion(distorted, blur, opacity, colors);
+    ctx.closePath();
+    ctx.restore();
+    if (i < layers - 1) {
+        requestAnimationFrame(() => paint({ points, colors, blur, opacity, distortion, layers }, i + 1));
+    }
+};
+function randomlyRotateAroundCenter(points, distorted) {
     const point = helpers_1.middle(points[0], points[Math.round(points.length / 2)]);
-    ctx.translate(point[0] + 400, point[1] + 300);
+    ctx.translate(point[0], point[1] - 100);
     ctx.rotate((helpers_1.random(-180, 180) * Math.PI) / 180);
     ctx.translate(-point[0], -point[1]);
     ctx.moveTo(distorted[0][0], distorted[0][1]);
-    for (let i = 0; i < distorted.length; i++) {
-        const [x, y] = distorted[i];
+}
+function paintDistortion(model, blur, opacity, colors) {
+    for (let i = 0; i < model.length; i++) {
+        const [x, y] = model[i];
         ctx.lineTo(x, y);
     }
     ctx.filter = `blur(${helpers_1.random(blur[0], blur[1])}px)`;
     ctx.fillStyle = colors_1.randomHue(colors[0], colors[1], helpers_1.random(opacity[0], opacity[1], false));
     ctx.fill();
-    ctx.closePath();
-    ctx.restore();
-    if (i < 100) {
-        requestAnimationFrame(() => paint({ points, colors, blur, opacity, distortion }, i + 1));
-    }
-};
+}
 setTimeout(() => {
     ctx = helpers_1.init(WIDTH, HEIGHT);
     ctx.fillStyle = '#fffee5';
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
     ctx.globalCompositeOperation = 'darken';
-    const [w, h] = [WIDTH / 4, HEIGHT / 4];
+    const [w, h] = [WIDTH / 2, HEIGHT / 2];
     const [x, y] = [200, 300];
     paint({
-        points: [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]],
-        colors: [290, 360],
-        blur: [10, 40],
-        opacity: [0.01, 0.04],
-        distortion: 90,
+        layers: 15,
+        points: [
+            [x + w / 3, y],
+            [x + (w / 3) * 2, y],
+            [x + w, y + h / 3],
+            [x + w, y + (h / 3) * 2],
+            [x + (w / 3) * 2, y + h],
+            [x + w / 3, y + h],
+            [x, y + (h / 3) * 2],
+            [x, y + h / 3],
+            [x + w / 3, y],
+        ],
+        colors: [220, 360],
+        blur: [1, 5],
+        opacity: [0.1, 0.4],
+        distortion: 20,
     });
 }, 0);
 //# sourceMappingURL=second.js.map
@@ -55,12 +72,12 @@ ___scope___.file("lib/helpers.js", function(exports, require, module, __filename
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function init(width, height) {
-    document.body.innerHTML = '';
-    const canvas = document.createElement('canvas');
+    document.body.innerHTML = "";
+    const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
     document.body.appendChild(canvas);
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
     return ctx;
 }
@@ -74,11 +91,11 @@ exports.middle = ([x1, y1], [x2, y2]) => [
 ];
 function distort(points, jitter = 5, iteration = 0) {
     let newPoints = [];
-    for (let i = 1; i < points.length; i++) {
-        newPoints.push(points[i]);
-        const [x, y] = exports.middle(points[i], points[i + 1] || points[1]);
+    points.forEach((point, i) => {
+        newPoints.push(point);
+        const [x, y] = exports.middle(points[i], points[i + 1] || points[0]);
         newPoints.push([x + exports.random(-jitter, jitter), y + exports.random(-jitter, jitter)]);
-    }
+    });
     return iteration > 3 ? points : distort(newPoints, jitter, iteration + 1);
 }
 exports.distort = distort;

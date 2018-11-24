@@ -1,10 +1,10 @@
 export function init(width: number, height: number): CanvasRenderingContext2D {
-  document.body.innerHTML = '';
-  const canvas: HTMLCanvasElement = document.createElement('canvas');
+  document.body.innerHTML = "";
+  const canvas: HTMLCanvasElement = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   document.body.appendChild(canvas);
-  let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  let ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   ctx.imageSmoothingEnabled = true;
   return ctx;
 }
@@ -24,11 +24,11 @@ export function distort(
   jitter = 5,
   iteration = 0
 ): number[][] {
-  let newPoints = [];
-  for (let i = 1; i < points.length; i++) {
-    newPoints.push(points[i]);
-    const [x, y] = middle(points[i], points[i + 1] || points[1]);
+  let newPoints: number[][] = [];
+  points.forEach((point, i) => {
+    newPoints.push(point);
+    const [x, y] = middle(points[i], points[i + 1] || points[0]);
     newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
-  }
+  });
   return iteration > 3 ? points : distort(newPoints, jitter, iteration + 1);
 }
