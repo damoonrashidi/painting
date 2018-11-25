@@ -1,4 +1,10 @@
-import { init, random, distort, middle } from './lib/helpers';
+import {
+  init,
+  random,
+  distort,
+  middle,
+  randomlyRotateAroundCenter,
+} from './lib/helpers';
 import { randomHue } from './lib/colors';
 const [WIDTH, HEIGHT] = [600, 800];
 let ctx: CanvasRenderingContext2D;
@@ -20,7 +26,7 @@ const paint = (config: PaintConfig, i = 0) => {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.beginPath();
 
-  randomlyRotateAroundCenter(points, distorted);
+  randomlyRotateAroundCenter(ctx, distorted);
   paintDistortion(distorted, blur, opacity, colors);
 
   ctx.closePath();
@@ -32,14 +38,6 @@ const paint = (config: PaintConfig, i = 0) => {
     );
   }
 };
-
-function randomlyRotateAroundCenter(points: number[][], distorted: number[][]) {
-  const point = middle(points[0], points[Math.round(points.length / 2)]);
-  ctx.translate(point[0], point[1] - 100);
-  ctx.rotate((random(-180, 180) * Math.PI) / 180);
-  ctx.translate(-point[0], -point[1]);
-  ctx.moveTo(distorted[0][0], distorted[0][1]);
-}
 
 function paintDistortion(
   model: number[][],
@@ -63,11 +61,11 @@ function paintDistortion(
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fffee5';
+  ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  ctx.globalCompositeOperation = 'darken';
-  const [w, h] = [WIDTH / 2, HEIGHT / 2];
-  const [x, y] = [200, 300];
+  ctx.globalCompositeOperation = 'lighten';
+  const [w, h] = [WIDTH / 2.5, HEIGHT / 2.5];
+  const [x, y] = [180, 330];
   paint({
     layers: 15,
     points: [
@@ -81,9 +79,9 @@ setTimeout(() => {
       [x, y + h / 3],
       [x + w / 3, y],
     ],
-    colors: [220, 360],
-    blur: [1, 5],
+    colors: [280, 360],
+    blur: [3, 8],
     opacity: [0.1, 0.4],
-    distortion: 20,
+    distortion: 10,
   });
 }, 0);

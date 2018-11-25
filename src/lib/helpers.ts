@@ -1,10 +1,10 @@
 export function init(width: number, height: number): CanvasRenderingContext2D {
-  document.body.innerHTML = "";
-  const canvas: HTMLCanvasElement = document.createElement("canvas");
+  document.body.innerHTML = '';
+  const canvas: HTMLCanvasElement = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   document.body.appendChild(canvas);
-  let ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+  let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   ctx.imageSmoothingEnabled = true;
   return ctx;
 }
@@ -31,4 +31,15 @@ export function distort(
     newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
   });
   return iteration > 3 ? points : distort(newPoints, jitter, iteration + 1);
+}
+
+export function randomlyRotateAroundCenter(
+  ctx: CanvasRenderingContext2D,
+  model: number[][]
+) {
+  const point = middle(model[0], model[Math.round(model.length / 2)]);
+  ctx.translate(point[0], point[1] - 100);
+  ctx.rotate((random(-100, 100) * Math.PI) / 180);
+  ctx.translate(-point[0], -point[1]);
+  ctx.moveTo(model[0][0], model[0][1]);
 }
