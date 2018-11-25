@@ -40,6 +40,6 @@ export function randomlyRotateAroundCenter(
   const point = middle(model[0], model[Math.round(model.length / 2)]);
   ctx.translate(point[0], point[1] - 100);
   ctx.rotate((random(-100, 100) * Math.PI) / 180);
-  ctx.translate(-point[0], -point[1]);
+  ctx.translate(-point[0] + random(-150, 150), -point[1] + random(-150, 150));
   ctx.moveTo(model[0][0], model[0][1]);
 }

@@ -18,7 +18,8 @@ interface PaintConfig {
   layers: number;
 }
 
-const paint = (config: PaintConfig, i = 0) => {
+const paintDistortion = (config: PaintConfig, i = 0) => {
+  ctx.globalCompositeOperation = 'darken';
   const { points, colors, blur, opacity, distortion, layers } = config;
   let distorted = distort(points, distortion);
 
@@ -27,19 +28,61 @@ const paint = (config: PaintConfig, i = 0) => {
   ctx.beginPath();
 
   randomlyRotateAroundCenter(ctx, distorted);
-  paintDistortion(distorted, blur, opacity, colors);
+  paintModel(distorted, blur, opacity, colors);
 
   ctx.closePath();
   ctx.restore();
 
   if (i < layers - 1) {
     requestAnimationFrame(() =>
-      paint({ points, colors, blur, opacity, distortion, layers }, i + 1)
+      paintDistortion(
+        { points, colors, blur, opacity, distortion, layers },
+        i + 1
+      )
     );
   }
 };
 
-function paintDistortion(
+const paintBalls = (n: number) => {
+  ctx.globalCompositeOperation = 'screen';
+  for (let i = 0; i < n; i++) {
+    ctx.fillStyle = randomHue(290, 350);
+    const x = random(0, WIDTH);
+    const y = random(0, HEIGHT);
+    const r = random(1, 5);
+    ctx.filter = `blur(${random(10, 20)}px) opacity(0.2)`;
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+};
+
+const paint = () => {
+  // paintBalls(30);
+
+  const [w, h] = [WIDTH / 3.5, HEIGHT / 3.5];
+  const [x, y] = [WIDTH / 2 - w / 2, HEIGHT / 2 - h / 4];
+  paintDistortion({
+    blur: [3, 10],
+    colors: [290, 360],
+    distortion: 20,
+    layers: 100,
+    opacity: [0.1, 0.4],
+    points: [
+      [x + w / 3, y],
+      [x + (w / 3) * 2, y],
+      [x + w, y + h / 3],
+      [x + w, y + (h / 3) * 2],
+      [x + (w / 3) * 2, y + h],
+      [x + w / 3, y + h],
+      [x, y + (h / 3) * 2],
+      [x, y + h / 3],
+      [x + w / 3, y],
+    ],
+  });
+};
+
+function paintModel(
   model: number[][],
   blur: [number, number],
   opacity: [number, number],
@@ -61,27 +104,7 @@ function paintDistortion(
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#222';
+  ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  ctx.globalCompositeOperation = 'lighten';
-  const [w, h] = [WIDTH / 2.5, HEIGHT / 2.5];
-  const [x, y] = [180, 330];
-  paint({
-    layers: 15,
-    points: [
-      [x + w / 3, y],
-      [x + (w / 3) * 2, y],
-      [x + w, y + h / 3],
-      [x + w, y + (h / 3) * 2],
-      [x + (w / 3) * 2, y + h],
-      [x + w / 3, y + h],
-      [x, y + (h / 3) * 2],
-      [x, y + h / 3],
-      [x + w / 3, y],
-    ],
-    colors: [280, 360],
-    blur: [3, 8],
-    opacity: [0.1, 0.4],
-    distortion: 10,
-  });
+  paint();
 }, 0);
