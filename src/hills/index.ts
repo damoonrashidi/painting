@@ -10,7 +10,7 @@ interface MountainOptions {
 
 interface CircleOptions {
   fill: boolean;
-  color: string;
+  color: string[];
   x: number;
   y: number;
   r: number;
@@ -22,22 +22,22 @@ const paint = () => {
   drawBackground('#fff', '#f0f0f0');
 
   drawCircle({
-    color: '#7dbdf2',
+    color: ['#7dbdf2', '#7dbdf2'],
     fill: false,
-    stroke: 20,
+    stroke: 10,
     r: WIDTH / 3.3,
     x: WIDTH / 2,
     y: HEIGHT / 2,
   });
 
-  ctx.globalCompositeOperation = 'xor';
+  ctx.globalCompositeOperation = 'destination-in';
   drawCircle({
-    color: '#f0f0f0',
+    color: ['#fff', 'transparent'],
     fill: true,
     stroke: 10,
     r: WIDTH / 3.25,
     x: WIDTH / 2,
-    y: HEIGHT / 2 + 10,
+    y: HEIGHT / 2 + 5,
   });
 
   //draw mountains
@@ -60,8 +60,8 @@ function drawCircle(options: CircleOptions) {
   const { fill, x, y, r, color, stroke } = options;
   ctx.beginPath();
   const gradient = ctx.createLinearGradient(0, y - r / 2, 0, y + r / 2);
-  gradient.addColorStop(0, color);
-  gradient.addColorStop(1, '#f0f0f0');
+  gradient.addColorStop(0, color[0]);
+  gradient.addColorStop(1, color[1]);
   ctx.lineWidth = stroke;
   ctx.strokeStyle = gradient;
   ctx.fillStyle = gradient;
