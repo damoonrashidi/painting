@@ -4,8 +4,8 @@ export default {
   main: '#b54c38',
 };
 
-export const randomHue = (
+export const randomHex = (
   min: number = 0,
-  max: number = 360,
+  max: number = 0xffffff,
   opacity = 1
-): string => `hsla(${random(min, max)}, 70%, 60%, ${opacity})`;
+): number => parseInt(random(min, max).toString(), 16);
