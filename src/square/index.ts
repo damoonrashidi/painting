@@ -42,19 +42,26 @@ const paint = () => {
     scene.add(building);
   });
 
-  const field = new THREE.Mesh(
-    new THREE.BoxGeometry(110, 1, 160),
-    new THREE.MeshPhongMaterial({
-      color: 0x00ff00,
-    })
-  );
-  scene.add(field);
+  scene.add(createField());
 
   requestAnimationFrame(() => {
     camera.position.z += Math.sin(new Date().getTime()) * 2;
     renderer.render(scene, camera);
   });
 };
+
+function createField(): THREE.Mesh {
+  const shape = new THREE.Shape();
+  shape.moveTo(-100, -100);
+  shape.lineTo(-100, 100);
+  shape.lineTo(100, 100);
+  shape.lineTo(100, -100);
+  shape.lineTo(-100, -100);
+  return new THREE.Mesh(
+    new THREE.ShapeGeometry(shape),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+  );
+}
 
 setTimeout(() => {
   document.body.innerHTML = '';
