@@ -10,13 +10,27 @@ interface Box {
   child: Box | THREE.Mesh[];
 }
 
+const paint = () => {
+  const { scene, camera, renderer } = init(WIDTH, HEIGHT);
+
+  buildCity().forEach(building => {
+    scene.add(building);
+  });
+
+  // scene.add(createField());
+  renderer.render(scene, camera);
+};
+
 function buildCity(): THREE.Mesh[] {
   const buildings: THREE.Mesh[] = [];
-  for (let x = -40; x < 40; x++) {
+  for (let x = -30; x < 30; x++) {
     for (let z = -50; z < 50; z++) {
-      if (shouldDraw(x, z)) {
+      const width = random(1.5, 3);
+      const depth = random(2, 4);
+      const height = random(1, width * depth) * 3;
+      if (shouldDraw(x, z) && height > 0) {
         const building = new THREE.Mesh(
-          new THREE.BoxGeometry(2, 10 + random(-5, 10), 2),
+          new THREE.BoxGeometry(width, height, depth),
           new THREE.MeshPhysicalMaterial({
             wireframe: false,
           })
@@ -32,34 +46,24 @@ function buildCity(): THREE.Mesh[] {
 }
 
 function shouldDraw(x: number, z: number): boolean {
-  return !between(x, -10, 10) || !between(z, -15, 15);
+  return (
+    //park
+    (!between(x, -10, 10) || !between(z, -30, 30)) &&
+    !between(z, -30, -29) &&
+    !between(x, -25, -24.5) &&
+    (!between(x, 20, 20.5) || !between(z, -50, -30)) &&
+    (!between(x, 10, 30) || !between(z, 20, 20.5))
+  );
 }
 
-const paint = () => {
-  const { scene, camera, renderer } = init(WIDTH, HEIGHT);
-
-  buildCity().forEach(building => {
-    scene.add(building);
-  });
-
-  scene.add(createField());
-
-  requestAnimationFrame(() => {
-    camera.position.z += Math.sin(new Date().getTime()) * 2;
-    renderer.render(scene, camera);
-  });
-};
+function buildingHeight(x: number, z: number) {
+  return Math.sqrt(Math.abs(x) ** 2 + Math.abs(z) ** 2);
+}
 
 function createField(): THREE.Mesh {
-  const shape = new THREE.Shape();
-  shape.moveTo(-100, -100);
-  shape.lineTo(-100, 100);
-  shape.lineTo(100, 100);
-  shape.lineTo(100, -100);
-  shape.lineTo(-100, -100);
   return new THREE.Mesh(
-    new THREE.ShapeGeometry(shape),
-    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    new THREE.BoxGeometry(100, 1, 290),
+    new THREE.MeshPhysicalMaterial({ color: 0xffffff })
   );
 }
 

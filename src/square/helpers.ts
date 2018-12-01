@@ -5,23 +5,23 @@ export function init(width: number, height: number) {
   const camera = new THREE.PerspectiveCamera(95, width / height, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer();
 
-  renderer.setClearColor(0x222222);
+  renderer.setClearColor(0xeeeeee);
   renderer.setSize(width, height);
 
-  camera.position.set(0, 200, -140);
+  camera.position.set(0, 250, 0);
   camera.lookAt(0, 0, 0);
 
-  const light = new THREE.PointLight(0xffffff, 1);
-  light.position.set(0, 30, 100);
-  scene.add(light);
+  const red = new THREE.PointLight(0xff0000, 1);
+  red.position.set(-50, 30, 100);
+  scene.add(red);
 
-  // const plane = new THREE.Mesh(
-  //   new THREE.BoxGeometry(300, 1, 300),
-  //   new THREE.MeshPhongMaterial({ color: 0xffffff })
-  // );
-  // plane.position.set(0, -10, 0);
-  // plane.receiveShadow = true;
-  // scene.add(plane);
+  const green = new THREE.PointLight(0x00ff00, 1);
+  green.position.set(50, 30, 100);
+  scene.add(green);
+
+  const blue = new THREE.PointLight(0x0000ff, 1);
+  blue.position.set(0, 30, -100);
+  scene.add(blue);
 
   document.body.appendChild(renderer.domElement);
   return { scene, camera, renderer };
