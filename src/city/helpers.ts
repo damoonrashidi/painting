@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { randomHex } from './colors';
 
 export function init(width: number, height: number) {
   const scene = new THREE.Scene();
@@ -12,15 +13,15 @@ export function init(width: number, height: number) {
   camera.lookAt(0, 0, 0);
 
   const red = new THREE.PointLight(0xff0000, 1);
-  red.position.set(-50, 30, 100);
+  red.position.set(-50, 100, 100);
   scene.add(red);
 
   const green = new THREE.PointLight(0x00ff00, 1);
-  green.position.set(50, 30, 100);
+  green.position.set(50, 100, 100);
   scene.add(green);
 
   const blue = new THREE.PointLight(0x0000ff, 1);
-  blue.position.set(0, 30, -100);
+  blue.position.set(0, 100, -100);
   scene.add(blue);
 
   document.body.appendChild(renderer.domElement);

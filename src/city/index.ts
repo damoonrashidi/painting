@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
+import { vertexShader, fragmentShader } from './shader';
 const [WIDTH, HEIGHT] = [1200, 1600];
 
 interface Box {
@@ -27,18 +28,15 @@ function buildCity(): THREE.Mesh[] {
     for (let z = -50; z < 50; z++) {
       const width = random(1.5, 3);
       const depth = random(2, 4);
-      let height = random(1, width * depth) * 3;
-      // height = random(0, 10) > 8 ? 0 : height;
+      const height = random(1, width * depth * 4);
       if (shouldDraw(x, z) && height > 0) {
         const building = new THREE.Mesh(
           new THREE.BoxGeometry(width, height, depth),
-          new THREE.MeshPhysicalMaterial({
-            wireframe: false,
-          })
+          new THREE.MeshPhysicalMaterial({})
         );
         building.position.set(x * 5, 0, z * 5);
-        building.castShadow = true;
-        building.receiveShadow = true;
+        // building.castShadow = true;
+        // building.receiveShadow = true;
         buildings.push(building);
       }
     }
@@ -49,12 +47,27 @@ function buildCity(): THREE.Mesh[] {
 function shouldDraw(x: number, z: number): boolean {
   return (
     //park
-    (!between(x, -10, 10) || !between(z, -30, 30)) &&
+    street(x, z, -10, 20, -30, 60) &&
     !between(z, -30, -29) &&
     !between(x, -25, -24.5) &&
-    (!between(x, 20, 20.5) || !between(z, -50, -30)) &&
-    (!between(x, 10, 30) || !between(z, 20, 20.5))
+    street(x, z, 20, 0.5, -50, 20) &&
+    street(x, z, 10, 20, 20, 0.5) &&
+    street(x, z, -40, 30, -20, 0.5) &&
+    street(x, z, 20, 50, -40, 0.5) &&
+    street(x, z, -40, 80, 0, 0.5) &&
+    street(x, z, 20, 0.5, 0, 20)
   );
+}
+
+function street(
+  pX: number,
+  pZ: number,
+  x: number,
+  w: number,
+  z: number,
+  h: number
+) {
+  return !between(pX, x, x + w) || !between(pZ, z, z + h);
 }
 
 function buildingHeight(x: number, z: number) {
@@ -64,7 +77,7 @@ function buildingHeight(x: number, z: number) {
 function createField(): THREE.Mesh {
   return new THREE.Mesh(
     new THREE.BoxGeometry(100, 1, 290),
-    new THREE.MeshPhysicalMaterial({ color: 0xffffff })
+    new THREE.ShaderMaterial({ vertexShader, fragmentShader })
   );
 }
 
