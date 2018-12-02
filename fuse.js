@@ -8,7 +8,7 @@ const fuse = FuseBox.init({
 fuse.dev();
 fuse
   .bundle('app')
-  .instructions(' > square/index.ts')
+  .instructions(' > city/index.ts')
   .hmr()
   .watch();
 fuse.run();

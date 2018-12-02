@@ -4,7 +4,7 @@ import {
   distort,
   middle,
   randomlyRotateAroundCenter,
-} from './helpers';
+} from './index';
 import { randomHue } from './colors';
 const [WIDTH, HEIGHT] = [600, 800];
 let ctx: CanvasRenderingContext2D;

@@ -27,7 +27,8 @@ function buildCity(): THREE.Mesh[] {
     for (let z = -50; z < 50; z++) {
       const width = random(1.5, 3);
       const depth = random(2, 4);
-      const height = random(1, width * depth) * 3;
+      let height = random(1, width * depth) * 3;
+      // height = random(0, 10) > 8 ? 0 : height;
       if (shouldDraw(x, z) && height > 0) {
         const building = new THREE.Mesh(
           new THREE.BoxGeometry(width, height, depth),

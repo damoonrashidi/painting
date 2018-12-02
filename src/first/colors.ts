@@ -1,4 +1,4 @@
-import { random } from './helpers';
+import { random } from './index';
 export default {
   bg: '#fffeee',
   main: '#b54c38',
