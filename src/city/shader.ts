@@ -1,43 +1,96 @@
 export const vertexShader = `
-uniform vec2 uvScale;
-      varying vec2 vUv;
-      void main()
-      {
-        vUv = uvScale * uv;
-        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_Position = projectionMatrix * mvPosition;
-      }
+#version 120
+
+uniform float tilingFactor;
+
+varying vec4 normal;
+
+void main()
+{
+    normal.xyz = normalize(gl_NormalMatrix * gl_Normal);
+    normal.w = gl_Vertex.y;
+
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_TexCoord[0] = gl_MultiTexCoord0 * tilingFactor;
+}
+
 `;
 
 export const fragmentShader = `
-uniform float time;
-      uniform float fogDensity;
-      uniform vec3 fogColor;
-      uniform sampler2D texture1;
-      uniform sampler2D texture2;
-      varying vec2 vUv;
-      void main( void ) {
-        vec2 position = - 1.0 + 2.0 * vUv;
-        vec4 noise = texture2D( texture1, vUv );
-        vec2 T1 = vUv + vec2( 1.5, - 1.5 ) * time * 0.02;
-        vec2 T2 = vUv + vec2( - 0.5, 2.0 ) * time * 0.01;
-        T1.x += noise.x * 2.0;
-        T1.y += noise.y * 2.0;
-        T2.x -= noise.y * 0.2;
-        T2.y += noise.z * 0.2;
-        float p = texture2D( texture1, T1 * 2.0 ).a;
-        vec4 color = texture2D( texture2, T2 * 2.0 );
-        vec4 temp = color * ( vec4( p, p, p, p ) * 2.0 ) + ( color * color - 0.1 );
-        if( temp.r > 1.0 ) { temp.bg += clamp( temp.r - 2.0, 0.0, 100.0 ); }
-        if( temp.g > 1.0 ) { temp.rb += temp.g - 1.0; }
-        if( temp.b > 1.0 ) { temp.rg += temp.b - 1.0; }
-        gl_FragColor = temp;
-        float depth = gl_FragCoord.z / gl_FragCoord.w;
-        const float LOG2 = 1.442695;
-        float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 );
-        fogFactor = 1.0 - clamp( fogFactor, 0.0, 1.0 );
-        gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
-      }
+#version 120
 
+struct TerrainRegion
+{
+    float min;
+    float max;
+};
 
+uniform TerrainRegion region1;
+uniform TerrainRegion region2;
+uniform TerrainRegion region3;
+uniform TerrainRegion region4;
+
+uniform sampler2D region1ColorMap;
+uniform sampler2D region2ColorMap;
+uniform sampler2D region3ColorMap;
+uniform sampler2D region4ColorMap;
+
+varying vec4 normal;
+
+vec4 GenerateTerrainColor()
+{
+    vec4 terrainColor = vec4(0.0, 0.0, 0.0, 1.0);
+    float height = normal.w;
+    float regionMin = 0.0;
+    float regionMax = 0.0;
+    float regionRange = 0.0;
+    float regionWeight = 0.0;
+    
+    // Terrain region 1.
+    regionMin = region1.min;
+    regionMax = region1.max;
+    regionRange = regionMax - regionMin;
+    regionWeight = (regionRange - abs(height - regionMax)) / regionRange;
+    regionWeight = max(0.0, regionWeight);
+    terrainColor += regionWeight * texture2D(region1ColorMap, gl_TexCoord[0].st);
+
+    // Terrain region 2.
+    regionMin = region2.min;
+    regionMax = region2.max;
+    regionRange = regionMax - regionMin;
+    regionWeight = (regionRange - abs(height - regionMax)) / regionRange;
+    regionWeight = max(0.0, regionWeight);
+    terrainColor += regionWeight * texture2D(region2ColorMap, gl_TexCoord[0].st);
+
+    // Terrain region 3.
+    regionMin = region3.min;
+    regionMax = region3.max;
+    regionRange = regionMax - regionMin;
+    regionWeight = (regionRange - abs(height - regionMax)) / regionRange;
+    regionWeight = max(0.0, regionWeight);
+    terrainColor += regionWeight * texture2D(region3ColorMap, gl_TexCoord[0].st);
+
+    // Terrain region 4.
+    regionMin = region4.min;
+    regionMax = region4.max;
+    regionRange = regionMax - regionMin;
+    regionWeight = (regionRange - abs(height - regionMax)) / regionRange;
+    regionWeight = max(0.0, regionWeight);
+    terrainColor += regionWeight * texture2D(region4ColorMap, gl_TexCoord[0].st);
+
+    return terrainColor;
+}
+
+void main()
+{   
+    vec3 n = normalize(normal.xyz);
+
+    float nDotL = max(0.0, dot(n, gl_LightSource[0].position.xyz));
+        
+    vec4 ambient = gl_FrontLightProduct[0].ambient;
+    vec4 diffuse = gl_FrontLightProduct[0].diffuse * nDotL;
+    vec4 color = gl_FrontLightModelProduct.sceneColor + ambient + diffuse;   
+    
+    gl_FragColor = color * GenerateTerrainColor();
+}
 `;

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
-import { vertexShader, fragmentShader } from './shader';
 const [WIDTH, HEIGHT] = [1200, 1600];
+let texture: any;
 
 interface Box {
   x: number;
@@ -19,6 +19,7 @@ const paint = () => {
   });
 
   // scene.add(createField());
+
   renderer.render(scene, camera);
 };
 
@@ -35,8 +36,8 @@ function buildCity(): THREE.Mesh[] {
           new THREE.MeshPhysicalMaterial({})
         );
         building.position.set(x * 5, 0, z * 5);
-        // building.castShadow = true;
-        // building.receiveShadow = true;
+        building.castShadow = true;
+        building.receiveShadow = true;
         buildings.push(building);
       }
     }
@@ -48,14 +49,19 @@ function shouldDraw(x: number, z: number): boolean {
   return (
     //park
     street(x, z, -10, 20, -30, 60) &&
+    //main streets
     !between(z, -30, -29) &&
     !between(x, -25, -24.5) &&
+    //other streets
     street(x, z, 20, 0.5, -50, 20) &&
     street(x, z, 10, 20, 20, 0.5) &&
     street(x, z, -40, 30, -20, 0.5) &&
     street(x, z, 20, 50, -40, 0.5) &&
     street(x, z, -40, 80, 0, 0.5) &&
-    street(x, z, 20, 0.5, 0, 20)
+    street(x, z, 20, 0.5, 0, 20) &&
+    street(x, z, 10, 20, 35, 0.5) &&
+    street(x, z, 0, 0.5, -50, 20) &&
+    street(x, z, 10, 0.5, 30, 30)
   );
 }
 
@@ -75,13 +81,22 @@ function buildingHeight(x: number, z: number) {
 }
 
 function createField(): THREE.Mesh {
-  return new THREE.Mesh(
-    new THREE.BoxGeometry(100, 1, 290),
-    new THREE.ShaderMaterial({ vertexShader, fragmentShader })
+  const geometry = new THREE.PlaneGeometry(100, 290, 20, 20);
+  geometry.vertices.forEach((_, i) => {
+    geometry.vertices[i].z += random(0, 5);
+  });
+  const mesh = new THREE.Mesh(
+    geometry,
+    new THREE.MeshPhysicalMaterial({ map: texture })
   );
+  mesh.rotation.set(4.73, 0, 0);
+  return mesh;
 }
 
 setTimeout(() => {
   document.body.innerHTML = '';
-  paint();
+  new THREE.TextureLoader().load('./facade.jpg', t => {
+    texture = t;
+    paint();
+  });
 }, 0);
