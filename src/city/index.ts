@@ -1,15 +1,6 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
 const [WIDTH, HEIGHT] = [1200, 1600];
-let texture: any;
-
-interface Box {
-  x: number;
-  z: number;
-  size: number;
-  averageHeight: number;
-  child: Box | THREE.Mesh[];
-}
 
 const paint = () => {
   const { scene, camera, renderer } = init(WIDTH, HEIGHT);
@@ -19,7 +10,6 @@ const paint = () => {
   });
 
   // scene.add(createField());
-
   renderer.render(scene, camera);
 };
 
@@ -81,22 +71,17 @@ function buildingHeight(x: number, z: number) {
 }
 
 function createField(): THREE.Mesh {
-  const geometry = new THREE.PlaneGeometry(100, 290, 20, 20);
-  geometry.vertices.forEach((_, i) => {
-    geometry.vertices[i].z += random(0, 5);
-  });
-  const mesh = new THREE.Mesh(
-    geometry,
-    new THREE.MeshPhysicalMaterial({ map: texture })
-  );
+  const geometry = new THREE.PlaneGeometry(95, 285, 20, 20);
+  const material = new THREE.MeshPhysicalMaterial({ color: 0x00ff00 });
+  material.reflectivity = 0.1;
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.rotation.set(4.73, 0, 0);
+  mesh.position.z += 5;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
 setTimeout(() => {
   document.body.innerHTML = '';
-  new THREE.TextureLoader().load('./facade.jpg', t => {
-    texture = t;
-    paint();
-  });
+  paint();
 }, 0);

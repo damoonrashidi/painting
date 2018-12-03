@@ -22,12 +22,14 @@ export function init(width: number, height: number) {
 
 function addLightsTo(scene: THREE.Scene) {
   const red = new THREE.PointLight(0xff0000, 1);
+  red.castShadow = true;
   red.position.set(-50, 100, 100);
 
   const green = new THREE.PointLight(0x00ff00, 1);
   green.position.set(50, 100, 100);
 
   const blue = new THREE.PointLight(0x0000ff, 1);
+  blue.castShadow = true;
   blue.position.set(0, 100, -100);
 
   scene.add(red, green, blue);
