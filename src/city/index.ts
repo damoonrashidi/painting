@@ -1,15 +1,17 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
 const [WIDTH, HEIGHT] = [1200, 1600];
+let buildings: THREE.Mesh[] = [];
 
 const paint = () => {
   const { scene, camera, renderer } = init(WIDTH, HEIGHT);
 
-  buildCity().forEach(building => {
+  buildings = buildCity();
+  buildings.forEach((building, i) => {
+    building.name = `b_${i}`;
     scene.add(building);
   });
 
-  // scene.add(createField());
   renderer.render(scene, camera);
 };
 
@@ -18,8 +20,8 @@ function buildCity(): THREE.Mesh[] {
   for (let x = -30; x < 30; x++) {
     for (let z = -50; z < 50; z++) {
       const width = random(1.5, 3);
-      const depth = random(2, 4);
-      const height = random(1, width * depth * 4);
+      const depth = random(1.5, 3);
+      const height = random(1, 2);
       if (shouldDraw(x, z) && height > 0) {
         const building = new THREE.Mesh(
           new THREE.BoxGeometry(width, height, depth),
@@ -51,6 +53,7 @@ function shouldDraw(x: number, z: number): boolean {
     street(x, z, 20, 0.5, 0, 20) &&
     street(x, z, 10, 20, 35, 0.5) &&
     street(x, z, 0, 0.5, -50, 20) &&
+    street(x, z, -30, 5, 5, 0.5) &&
     street(x, z, 10, 0.5, 30, 30)
   );
 }

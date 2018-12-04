@@ -11,7 +11,7 @@ export function init(width: number, height: number) {
   renderer.setClearColor(0xeeeeee);
   renderer.setSize(width, height);
 
-  camera.position.set(0, 250, 0);
+  camera.position.set(-250, 250, -250);
   camera.lookAt(0, 0, 0);
 
   addLightsTo(scene);
