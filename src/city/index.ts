@@ -2,36 +2,36 @@ import * as THREE from 'three';
 import { init, random, between } from './helpers';
 const [WIDTH, HEIGHT] = [1200, 1600];
 let buildings: THREE.Mesh[] = [];
+let scene: THREE.Scene;
+let camera: THREE.PerspectiveCamera;
+let renderer: THREE.WebGLRenderer;
 
 const paint = () => {
-  const { scene, camera, renderer } = init(WIDTH, HEIGHT);
-
   buildings = buildCity();
   buildings.forEach((building, i) => {
     building.name = `b_${i}`;
     scene.add(building);
   });
 
+  // scene.add(createField());
   renderer.render(scene, camera);
 };
 
 function buildCity(): THREE.Mesh[] {
   const buildings: THREE.Mesh[] = [];
-  for (let x = -30; x < 30; x++) {
-    for (let z = -50; z < 50; z++) {
-      const width = random(1.5, 3);
-      const depth = random(1.5, 3);
-      const height = random(1, 2);
-      if (shouldDraw(x, z) && height > 0) {
-        const building = new THREE.Mesh(
-          new THREE.BoxGeometry(width, height, depth),
-          new THREE.MeshPhysicalMaterial({})
-        );
-        building.position.set(x * 5, 0, z * 5);
-        building.castShadow = true;
-        building.receiveShadow = true;
-        buildings.push(building);
-      }
+  for (let i = 0; i < 6100; i++) {
+    const x = (i % 60) - 30;
+    const z = Math.round(i / 60) - 50;
+    const [w, d, h] = [random(1.5, 3), random(1.5, 3), random(1, 2)];
+    if (shouldDraw(x, z)) {
+      const building = new THREE.Mesh(
+        new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshPhysicalMaterial({})
+      );
+      building.position.set(x * 5, 0, z * 5);
+      building.castShadow = true;
+      building.receiveShadow = true;
+      buildings.push(building);
     }
   }
   return buildings;
@@ -54,6 +54,8 @@ function shouldDraw(x: number, z: number): boolean {
     street(x, z, 10, 20, 35, 0.5) &&
     street(x, z, 0, 0.5, -50, 20) &&
     street(x, z, -30, 5, 5, 0.5) &&
+    street(x, z, -30, 5, 5, 0.5) &&
+    street(x, z, 20, 30, -40, 0.5) &&
     street(x, z, 10, 0.5, 30, 30)
   );
 }
@@ -74,17 +76,20 @@ function buildingHeight(x: number, z: number) {
 }
 
 function createField(): THREE.Mesh {
-  const geometry = new THREE.PlaneGeometry(95, 285, 20, 20);
-  const material = new THREE.MeshPhysicalMaterial({ color: 0x00ff00 });
-  material.reflectivity = 0.1;
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(95, 285, 12, 12),
+    new THREE.MeshPhysicalMaterial({})
+  );
   mesh.rotation.set(4.73, 0, 0);
-  mesh.position.z += 5;
   mesh.receiveShadow = true;
   return mesh;
 }
 
 setTimeout(() => {
   document.body.innerHTML = '';
+  const options = init(WIDTH, HEIGHT);
+  scene = options.scene;
+  camera = options.camera;
+  renderer = options.renderer;
   paint();
 }, 0);
