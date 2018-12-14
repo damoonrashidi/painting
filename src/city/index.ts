@@ -19,7 +19,7 @@ const paint = () => {
 
 function buildCity(): THREE.Mesh[] {
   const buildings: THREE.Mesh[] = [];
-  for (let i = 0; i < 6100; i++) {
+  for (let i = 0; i < 6000; i++) {
     const x = (i % 60) - 30;
     const z = Math.round(i / 60) - 50;
     const [w, d, h] = [random(1.5, 3), random(1.5, 3), random(1, 2)];
@@ -56,7 +56,9 @@ function shouldDraw(x: number, z: number): boolean {
     street(x, z, -30, 5, 5, 0.5) &&
     street(x, z, -30, 5, 5, 0.5) &&
     street(x, z, 20, 30, -40, 0.5) &&
-    street(x, z, 10, 0.5, 30, 30)
+    street(x, z, 10, 0.5, 30, 30) &&
+    street(x, z, -30, 30, -51, 1) &&
+    street(x, z, -30, 60, 50, 0.5)
   );
 }
 
