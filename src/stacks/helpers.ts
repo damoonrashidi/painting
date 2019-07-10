@@ -23,7 +23,7 @@ export function random(min: number = 0, max: number = 100, rounded = true) {
 export function createStack(even: boolean): HTMLDivElement {
   const div = document.createElement('div');
   const show = random() > 45;
-  div.style.width = '15px';
+  div.style.width = '10px';
   div.style.height = `${random(1, 8)}px`;
   div.style.marginBottom = `${random(0, 1)}px`;
   div.style.transform = `skewY(${even ? 50 : -50}deg)`;
