@@ -21,24 +21,24 @@ const paint = () => {
   // draw background
   drawBackground('#fff', '#f0f0f0');
 
-  drawCircle({
-    color: ['#7dbdf2', '#7dbdf2'],
-    fill: false,
-    stroke: 10,
-    r: WIDTH / 3.3,
-    x: WIDTH / 2,
-    y: HEIGHT / 2,
-  });
+  // drawCircle({
+  //   color: ['#7dbdf2', '#7dbdf2'],
+  //   fill: false,
+  //   stroke: 10,
+  //   r: WIDTH / 3.3,
+  //   x: WIDTH / 2,
+  //   y: HEIGHT / 2,
+  // });
 
-  ctx.globalCompositeOperation = 'destination-in';
-  drawCircle({
-    color: ['#fff', 'transparent'],
-    fill: true,
-    stroke: 10,
-    r: WIDTH / 3.25,
-    x: WIDTH / 2,
-    y: HEIGHT / 2 + 5,
-  });
+  // ctx.globalCompositeOperation = 'destination-in';
+  // drawCircle({
+  //   color: ['#fff', 'transparent'],
+  //   fill: true,
+  //   stroke: 10,
+  //   r: WIDTH / 3.25,
+  //   x: WIDTH / 2,
+  //   y: HEIGHT / 2 + 5,
+  // });
 
   //draw mountains
   ctx.globalCompositeOperation = 'darken';
