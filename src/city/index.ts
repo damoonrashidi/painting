@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
-const [WIDTH, HEIGHT] = [1200, 1600];
+const [WIDTH, HEIGHT] = [700, 1200];
 let buildings: THREE.Mesh[] = [];
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
+let controls: THREE.OrbitControls;
 
 const paint = () => {
   buildings = buildCity();
@@ -13,20 +14,32 @@ const paint = () => {
     scene.add(building);
   });
 
-  // scene.add(createField());
-  renderer.render(scene, camera);
+  scene.add(createField());
+  scene.add(createFloor());
+  animate();
 };
+
+function animate() {
+  const light = scene.getObjectByName('light') as THREE.DirectionalLight;
+  const { x, y, z } = light.position;
+  light.position.set(x - 1, y + 1, z);
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
 
 function buildCity(): THREE.Mesh[] {
   const buildings: THREE.Mesh[] = [];
   for (let i = 0; i < 6000; i++) {
     const x = (i % 60) - 30;
     const z = Math.round(i / 60) - 50;
-    const [w, d, h] = [random(1.5, 3), random(1.5, 3), random(1, 2)];
+    const [w, d, h] = [random(1.5, 3), random(1.5, 3), random(1, 10)];
     if (shouldDraw(x, z)) {
       const building = new THREE.Mesh(
         new THREE.BoxGeometry(w, h, d),
-        new THREE.MeshPhysicalMaterial({})
+        new THREE.MeshPhysicalMaterial({
+          color: 0xfefefe,
+        })
       );
       building.position.set(x * 5, 0, z * 5);
       building.castShadow = true;
@@ -77,13 +90,25 @@ function buildingHeight(x: number, z: number) {
   return Math.sqrt(Math.abs(x) ** 2 + Math.abs(z) ** 2);
 }
 
+function createFloor(): THREE.Mesh {
+  const floor = new THREE.Mesh(
+    new THREE.BoxGeometry(310, 1, 500),
+    new THREE.MeshPhongMaterial({})
+  );
+  floor.position.set(0, -5, 0);
+  floor.receiveShadow = true;
+  return floor;
+}
+
 function createField(): THREE.Mesh {
   const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(95, 285, 12, 12),
-    new THREE.MeshPhysicalMaterial({})
+    new THREE.BoxGeometry(95, 1, 285),
+    new THREE.MeshPhysicalMaterial({
+      reflectivity: 0.05,
+    })
   );
-  mesh.rotation.set(4.73, 0, 0);
   mesh.receiveShadow = true;
+  mesh.castShadow = true;
   return mesh;
 }
 
@@ -93,5 +118,6 @@ setTimeout(() => {
   scene = options.scene;
   camera = options.camera;
   renderer = options.renderer;
+  controls = options.controls;
   paint();
 }, 0);

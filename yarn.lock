@@ -2321,6 +2321,18 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
 
+three-orbitcontrols-ts@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/three-orbitcontrols-ts/-/three-orbitcontrols-ts-0.1.2.tgz#2040955904022ae19c2e9c52ffdff43168658abd"
+  integrity sha1-IECVWQQCKuGcLpxS/9/0MWhlir0=
+  dependencies:
+    three "^0.83.0"
+
+three@^0.83.0:
+  version "0.83.0"
+  resolved "https://registry.npmjs.org/three/-/three-0.83.0.tgz#3b7f94790af3e021dac1f44a2617569ca2032b0b"
+  integrity sha1-O3+UeQrz4CHawfRKJhdWnKIDKws=
+
 three@^0.98.0:
   version "0.98.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.98.0.tgz#11d4e3cca4b5d099c7de0ea5afa153b5d20cda84"
