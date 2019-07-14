@@ -1,28 +1,19 @@
-import { init, createStack, createColumn, random } from './helpers';
+import { init, createStack, random } from './helpers';
 import { randomHue } from './colors';
 const WIDTH = 800;
 const HEIGHT = 1200;
-let consecutiveGap = 0;
 
-const paint = (div: HTMLDivElement) => {
-  for (let i = 0; i < 67; i++) {
-    const column = createColumn();
-    for (let depth = 0; depth < 330; depth++) {
-      const stack = createStack(i % 2 === 0, true);
-      stack.style.backgroundColor = randomHue(
-        ((i - 30) % depth) + 290,
-        (i % depth) + 340,
-        random(20, depth % 230),
-        random(30, 50)
-      );
-      column.appendChild(stack);
+const paint = (ctx: CanvasRenderingContext2D) => {
+  for (let x = 0; x < WIDTH; x += 23) {
+    for (let y = 0; y < HEIGHT; y += 18) {
+      createStack(ctx, x, y, x % 2 === 0);
     }
-    div.appendChild(column);
   }
 };
 
 setTimeout(() => {
-  const div = init(WIDTH, HEIGHT);
-  paint(div);
-  console.log('painting');
+  const ctx = init(WIDTH, HEIGHT);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  paint(ctx);
 }, 0);
