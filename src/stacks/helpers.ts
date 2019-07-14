@@ -17,11 +17,6 @@ export function random(min: number = 0, max: number = 100, rounded = true) {
     : Math.random() * (max - min) + min;
 }
 
-export function randomColor() {
-  const palette = ['#eeeeee', '#FFF587', '#FF8C64', '#FF665A', '#A3A1A8'];
-  return palette[random(0, palette.length - 1)];
-}
-
 export const middle = ([x1, y1]: number[], [x2, y2]: number[]): number[] => [
   (x1 + x2) / 2,
   (y1 + y2) / 2,
@@ -45,40 +40,45 @@ export function createStack(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
-  flip: boolean = false
+  flip: boolean,
+  color: string
 ) {
   const STACK_WIDTH = 20;
   const STACK_HEIGHT = 30;
+  const xPadding = random(0, 2);
 
   let points: number[][] = [];
 
   const region = new Path2D();
   if (flip) {
     points = [
-      [x, y + STACK_HEIGHT / 2],
+      [x + xPadding, y + STACK_HEIGHT / 2],
       [x + STACK_WIDTH, y],
       [x + STACK_WIDTH, y + STACK_HEIGHT / 2],
-      [x, y + STACK_HEIGHT],
+      [x + xPadding, y + STACK_HEIGHT],
+      [x + xPadding, y + STACK_HEIGHT / 2],
     ] as number[][];
   } else {
     points = [
-      [x, y],
+      [x + xPadding, y],
       [x + STACK_WIDTH, y + STACK_HEIGHT / 2],
       [x + STACK_WIDTH, y + STACK_HEIGHT],
-      [x, y + STACK_HEIGHT / 2],
+      [x + xPadding, y + STACK_HEIGHT / 2],
+      [x + xPadding, y + STACK_HEIGHT],
     ] as number[][];
   }
 
-  points = distort(points, 5, 3);
+  if (random(0, 100) > 50) {
+    points = distort(points, 1, 1);
+  }
 
   region.moveTo(points[0][0], points[0][1]);
   for (let i = 1; i < points.length - 1; i++) {
     region.lineTo(points[i][0], points[i][1]);
   }
   region.closePath();
-  ctx.filter = `blur(${random(5, 10, false)}px)`;
 
-  ctx.fillStyle = randomHue(250, 320, 50, random(20, 70));
+  ctx.fillStyle = color;
   region.closePath();
   ctx.fill(region);
 }
