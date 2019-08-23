@@ -46,15 +46,15 @@ const paintDistortion = (config: PaintConfig, i = 0) => {
 };
 
 const paint = () => {
-  paintGrid(ctx, WIDTH, HEIGHT, 25);
+  // paintGrid(ctx, WIDTH, HEIGHT, 25);
 
   let [w, h] = [WIDTH / 2, HEIGHT / 4.5];
   let [x, y] = [WIDTH / 2 - w / 2, HEIGHT / 2 - h / 4];
   paintDistortion({
-    blur: [2, 5],
+    blur: [2, 30],
     colors: [310, 360],
     distortion: 15,
-    layers: 45,
+    layers: 150,
     opacity: [0.1, 0.3],
     points: [
       [x + w / 3, y],

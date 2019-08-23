@@ -32,7 +32,7 @@ export function distort(
     const [x, y] = middle(points[i], points[i + 1] || points[0]);
     newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
   });
-  return iteration > 3 ? points : distort(newPoints, jitter, iteration + 1);
+  return iteration > 5 ? points : distort(newPoints, jitter, iteration + 1);
 }
 
 export function rotateRandomlyAroundCenter(
@@ -40,9 +40,9 @@ export function rotateRandomlyAroundCenter(
   model: number[][]
 ) {
   const point = middle(model[0], model[Math.round(model.length / 2)]);
-  ctx.translate(point[0], point[1]);
+  ctx.translate(point[0] + random(-100, 100), point[1] + random(-100, 100));
   ctx.rotate((random(-180, 180) * Math.PI) / 180);
-  ctx.translate(-point[0], -point[1]);
+  ctx.translate(-point[0] + random(-100, 100), -point[1] + random(-100, 100));
   ctx.moveTo(model[0][0], model[0][1]);
 }
 
