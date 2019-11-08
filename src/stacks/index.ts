@@ -9,7 +9,7 @@ export function randomColor() {
     '#000000',
     '#00264B',
     '#E00034',
-    '#eeeeee',
+    '#ffffff',
     '#48af0a',
     '#83878A',
     '#445257',

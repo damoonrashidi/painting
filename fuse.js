@@ -1,3 +1,5 @@
+const painting = process.argv[2];
+
 const { FuseBox, WebIndexPlugin } = require('fuse-box');
 const fuse = FuseBox.init({
   homeDir: 'src',
@@ -8,7 +10,7 @@ const fuse = FuseBox.init({
 fuse.dev();
 fuse
   .bundle('app')
-  .instructions(' > city/index.ts')
+  .instructions(` > ${painting}/index.ts`)
   .hmr()
   .watch();
 fuse.run();

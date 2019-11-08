@@ -19,26 +19,17 @@ interface CircleOptions {
 
 const paint = () => {
   // draw background
-  drawBackground('#fff', '#f0f0f0');
 
-  // drawCircle({
-  //   color: ['#7dbdf2', '#7dbdf2'],
-  //   fill: false,
-  //   stroke: 10,
-  //   r: WIDTH / 3.3,
-  //   x: WIDTH / 2,
-  //   y: HEIGHT / 2,
-  // });
-
-  // ctx.globalCompositeOperation = 'destination-in';
-  // drawCircle({
-  //   color: ['#fff', 'transparent'],
-  //   fill: true,
-  //   stroke: 10,
-  //   r: WIDTH / 3.25,
-  //   x: WIDTH / 2,
-  //   y: HEIGHT / 2 + 5,
-  // });
+  // drawBackground('#333', '#111');
+  ctx.globalCompositeOperation = 'destination-in';
+  drawCircle({
+    color: ['#fff', 'transparent'],
+    fill: true,
+    stroke: 10,
+    r: WIDTH / 3.25,
+    x: WIDTH / 2,
+    y: HEIGHT / 2 + 5,
+  });
 
   //draw mountains
   ctx.globalCompositeOperation = 'darken';
@@ -103,7 +94,7 @@ const mountain = ({ height, color }: MountainOptions) => {
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#f0f0f0';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint();
 }, 0);
