@@ -41,10 +41,10 @@ export function createStack(
   x: number,
   y: number,
   flip: boolean,
-  color: string
+  color: string,
+  stack_width: number,
+  stack_height: number
 ) {
-  const STACK_WIDTH = 20;
-  const STACK_HEIGHT = 30;
   const xPadding = random(0, 2);
 
   let points: number[][] = [];
@@ -52,19 +52,19 @@ export function createStack(
   const region = new Path2D();
   if (flip) {
     points = [
-      [x + xPadding, y + STACK_HEIGHT / 2],
-      [x + STACK_WIDTH, y],
-      [x + STACK_WIDTH, y + STACK_HEIGHT / 2],
-      [x + xPadding, y + STACK_HEIGHT],
-      [x + xPadding, y + STACK_HEIGHT / 2],
+      [x + xPadding, y + stack_height / 2],
+      [x + stack_width, y],
+      [x + stack_width, y + stack_height / 2],
+      [x + xPadding, y + stack_height],
+      [x + xPadding, y + stack_height / 2],
     ] as number[][];
   } else {
     points = [
       [x + xPadding, y],
-      [x + STACK_WIDTH, y + STACK_HEIGHT / 2],
-      [x + STACK_WIDTH, y + STACK_HEIGHT],
-      [x + xPadding, y + STACK_HEIGHT / 2],
-      [x + xPadding, y + STACK_HEIGHT],
+      [x + stack_width, y + stack_height / 2],
+      [x + stack_width, y + stack_height],
+      [x + xPadding, y + stack_height / 2],
+      [x + xPadding, y + stack_height],
     ] as number[][];
   }
 
