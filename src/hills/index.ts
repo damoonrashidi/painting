@@ -1,6 +1,4 @@
-import { init, random, middle, paintGrid, distort, fib } from "./helpers";
-import { randomHue } from "./colors";
-import { isContext } from "vm";
+import { init, distort, fib, randomHue } from '../lib';
 const [WIDTH, HEIGHT] = [1200, 1600];
 let ctx: CanvasRenderingContext2D;
 
@@ -21,9 +19,9 @@ interface CircleOptions {
 const paint = () => {
   // draw background
 
-  drawBackground("#000", "#555555dd");
+  drawBackground('#000', '#555555dd');
   drawCircle({
-    color: ["#11111199", "transparent"],
+    color: ['#11111199', 'transparent'],
     fill: true,
     stroke: 50,
     r: WIDTH / 3.25,
@@ -39,12 +37,12 @@ const paint = () => {
   ctx.lineTo(WIDTH * 0.7, HEIGHT);
   ctx.moveTo(WIDTH * 0.4, 0);
   ctx.closePath();
-  ctx.fillStyle = "#ffa000";
+  ctx.fillStyle = '#ffa000';
   ctx.fill();
 
   //draw mountains
-  ctx.globalCompositeOperation = "multiply";
-  const heights = [...Array(5).keys()].map((i) => fib(i + 11));
+  ctx.globalCompositeOperation = 'multiply';
+  const heights = [...Array(5).keys()].map(i => fib(i + 11));
   heights.forEach((height, i) => {
     mountain({ height, color: 70 + i * 60 });
   });
@@ -108,7 +106,7 @@ const mountain = ({ height, color }: MountainOptions) => {
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = "#f0f0f0";
+  ctx.fillStyle = '#f0f0f0';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint();
 }, 0);

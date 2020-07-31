@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { init, random, between } from './helpers';
+import { random, between, initTHREE } from '../lib';
 const [WIDTH, HEIGHT] = [700 * 4, 1200 * 4];
 let buildings: THREE.Mesh[] = [];
 let scene: THREE.Scene;
@@ -114,7 +114,7 @@ function createField(): THREE.Mesh {
 
 setTimeout(() => {
   document.body.innerHTML = '';
-  const options = init(WIDTH, HEIGHT);
+  const options = initTHREE(WIDTH, HEIGHT);
   scene = options.scene;
   camera = options.camera;
   renderer = options.renderer;

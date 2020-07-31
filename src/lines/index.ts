@@ -1,6 +1,4 @@
-import { init, random, Line } from "./helpers";
-import { randomHue } from "./colors";
-import { randomHex } from "../city/colors";
+import { init, random, Line, randomHue } from '../lib';
 const WIDTH = 3000;
 const HEIGHT = 4000;
 
@@ -42,7 +40,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = "#061729";
+  ctx.fillStyle = '#061729';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 });

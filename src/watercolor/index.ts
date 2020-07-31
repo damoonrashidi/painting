@@ -23,7 +23,7 @@ const paintDistortion = (config: PaintConfig, i = 0) => {
   const { points, colors, blur, opacity, distortion, layers } = config;
   let distorted = distort(points, distortion);
 
-  ctx.globalCompositeOperation = 'darken';
+  ctx.globalCompositeOperation = 'lighten';
 
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -54,7 +54,7 @@ const paint = () => {
     blur: [2, 30],
     colors: [310, 360],
     distortion: 15,
-    layers: 150,
+    layers: 80,
     opacity: [0.1, 0.3],
     points: [
       [x + w / 3, y],
@@ -93,7 +93,7 @@ function paintModel(
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#333';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint();
 }, 0);
