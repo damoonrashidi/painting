@@ -1,10 +1,11 @@
-import { init, random, Line } from './helpers';
-import { randomHue } from './colors';
+import { init, random, Line } from "./helpers";
+import { randomHue } from "./colors";
+import { randomHex } from "../city/colors";
 const WIDTH = 3000;
 const HEIGHT = 4000;
 
 const paint = (ctx: CanvasRenderingContext2D) => {
-  const lines: Line[] = Array(300)
+  const lines: Line[] = Array(250)
     .fill(0)
     .map(() => {
       const height = random(20, HEIGHT / 2);
@@ -13,7 +14,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         x: random(0, WIDTH),
         y: random(-HEIGHT, HEIGHT),
         color: randomHue(),
-        width: random(2, 30),
+        width: random(2, 60),
         height,
       };
     });
@@ -41,7 +42,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#061729';
+  ctx.fillStyle = "#061729";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 });

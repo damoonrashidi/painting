@@ -1,5 +1,6 @@
-import { init, random, middle, paintGrid, distort, fib } from './helpers';
-import { randomHue } from './colors';
+import { init, random, middle, paintGrid, distort, fib } from "./helpers";
+import { randomHue } from "./colors";
+import { isContext } from "vm";
 const [WIDTH, HEIGHT] = [1200, 1600];
 let ctx: CanvasRenderingContext2D;
 
@@ -20,20 +21,30 @@ interface CircleOptions {
 const paint = () => {
   // draw background
 
-  // drawBackground('#333', '#111');
-  ctx.globalCompositeOperation = 'destination-in';
+  drawBackground("#000", "#555555dd");
   drawCircle({
-    color: ['#fff', 'transparent'],
+    color: ["#11111199", "transparent"],
     fill: true,
-    stroke: 10,
+    stroke: 50,
     r: WIDTH / 3.25,
     x: WIDTH / 2,
     y: HEIGHT / 2 + 5,
   });
 
+  // SUN
+  ctx.beginPath();
+  ctx.moveTo(WIDTH * 0.4, 0);
+  ctx.lineTo(WIDTH, 0);
+  ctx.lineTo(WIDTH, HEIGHT);
+  ctx.lineTo(WIDTH * 0.7, HEIGHT);
+  ctx.moveTo(WIDTH * 0.4, 0);
+  ctx.closePath();
+  ctx.fillStyle = "#ffa000";
+  ctx.fill();
+
   //draw mountains
-  ctx.globalCompositeOperation = 'darken';
-  const heights = [...Array(5).keys()].map(i => fib(i + 11));
+  ctx.globalCompositeOperation = "multiply";
+  const heights = [...Array(5).keys()].map((i) => fib(i + 11));
   heights.forEach((height, i) => {
     mountain({ height, color: 70 + i * 60 });
   });
@@ -68,7 +79,10 @@ function drawCircle(options: CircleOptions) {
 
 const mountain = ({ height, color }: MountainOptions) => {
   ctx.beginPath();
-  let coords = [[0, HEIGHT - height], [WIDTH, HEIGHT - height - 100]];
+  let coords = [
+    [0, HEIGHT - height],
+    [WIDTH, HEIGHT - height - 100],
+  ];
   coords = distort({
     coords,
     jitter: 15,
@@ -94,7 +108,7 @@ const mountain = ({ height, color }: MountainOptions) => {
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#f0f0f0';
+  ctx.fillStyle = "#f0f0f0";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint();
 }, 0);
