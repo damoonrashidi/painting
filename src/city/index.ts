@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { init, random, between } from './helpers';
-const [WIDTH, HEIGHT] = [700, 1200];
+const [WIDTH, HEIGHT] = [700 * 4, 1200 * 4];
 let buildings: THREE.Mesh[] = [];
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
