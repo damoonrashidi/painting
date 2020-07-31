@@ -1,13 +1,6 @@
-import {
-  init,
-  random,
-  distort,
-  middle,
-  rotateRandomlyAroundCenter,
-  paintGrid,
-} from './helpers';
+import { init, random, distort, rotateRandomlyAroundCenter } from './helpers';
 import { randomHue } from './colors';
-const [WIDTH, HEIGHT] = [600, 800];
+const [WIDTH, HEIGHT] = [600 * 4, 800 * 4];
 let ctx: CanvasRenderingContext2D;
 
 interface PaintConfig {
@@ -53,7 +46,7 @@ const paint = () => {
   paintDistortion({
     blur: [2, 30],
     colors: [310, 360],
-    distortion: 15,
+    distortion: 30,
     layers: 80,
     opacity: [0.1, 0.3],
     points: [
@@ -66,6 +59,25 @@ const paint = () => {
       [x, y + (h / 3) * 2],
       [x, y + h / 3],
       [x + w / 3, y],
+    ],
+  });
+
+  paintDistortion({
+    blur: [2, 30],
+    colors: [200, 250],
+    distortion: 20,
+    layers: 90,
+    opacity: [0.1, 0.3],
+    points: [
+      [x + WIDTH / 4 + w * 0.5, y],
+      [x + WIDTH / 4 + w * 0.5 * 2, y],
+      [x + WIDTH / 4 + w, y + h * 0.5],
+      [x + WIDTH / 4 + w, y + h * 0.5 * 2],
+      [x + WIDTH / 4 + (w / 3) * 2, y + h / 2],
+      [x + WIDTH / 4 + w / 3, y + h / 2],
+      [x + WIDTH / 4, y + (h / 3) * 2],
+      [x + WIDTH / 4, y + h / 3],
+      [x + WIDTH / 4 + w / 3, y],
     ],
   });
 };
