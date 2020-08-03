@@ -1,6 +1,6 @@
 import { init, random, distort, rotateRandomlyAroundCenter } from './helpers';
 import { randomHue } from './colors';
-const [WIDTH, HEIGHT] = [600 * 4, 800 * 4];
+const [WIDTH, HEIGHT] = [800 * 4, 800 * 4];
 let ctx: CanvasRenderingContext2D;
 
 interface PaintConfig {
@@ -16,7 +16,7 @@ const paintDistortion = (config: PaintConfig, i = 0) => {
   const { points, colors, blur, opacity, distortion, layers } = config;
   let distorted = distort(points, distortion);
 
-  ctx.globalCompositeOperation = 'lighten';
+  ctx.globalCompositeOperation = 'darken';
 
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -48,36 +48,18 @@ const paint = () => {
     colors: [310, 360],
     distortion: 30,
     layers: 80,
-    opacity: [0.1, 0.3],
+    opacity: [0.0, 0.1],
     points: [
-      [x + w / 3, y],
-      [x + (w / 3) * 2, y],
-      [x + w, y + h / 3],
-      [x + w, y + (h / 3) * 2],
-      [x + (w / 3) * 2, y + h],
-      [x + w / 3, y + h],
-      [x, y + (h / 3) * 2],
-      [x, y + h / 3],
-      [x + w / 3, y],
-    ],
-  });
-
-  paintDistortion({
-    blur: [2, 30],
-    colors: [200, 250],
-    distortion: 20,
-    layers: 90,
-    opacity: [0.1, 0.3],
-    points: [
-      [x + WIDTH / 4 + w * 0.5, y],
-      [x + WIDTH / 4 + w * 0.5 * 2, y],
-      [x + WIDTH / 4 + w, y + h * 0.5],
-      [x + WIDTH / 4 + w, y + h * 0.5 * 2],
-      [x + WIDTH / 4 + (w / 3) * 2, y + h / 2],
-      [x + WIDTH / 4 + w / 3, y + h / 2],
-      [x + WIDTH / 4, y + (h / 3) * 2],
-      [x + WIDTH / 4, y + h / 3],
-      [x + WIDTH / 4 + w / 3, y],
+      [x * 1.25, y * 0.5],
+      [x * 1.5, y * 0.75],
+      [x * 1.5, y * 1.25],
+      [x * 1.25, y * 1.5],
+      [x * 0.75, y * 1.5],
+      [x * 0.5, y * 1.25],
+      [x * 0.5, y * 0.75],
+      [x * 0.25, y * 0.75],
+      [x * 0.75, y * 0.75],
+      [x * 1.25, y * 0.5],
     ],
   });
 };
@@ -105,7 +87,7 @@ function paintModel(
 
 setTimeout(() => {
   ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#eee';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint();
 }, 0);
