@@ -7,5 +7,8 @@ export default {
 export const randomHue = (
   min: number = 0,
   max: number = 360,
-  opacity = 1
-): string => `hsla(${random(min, max)}, 70%, 60%, ${opacity})`;
+  opacity = 1,
+  saturation: number = 70,
+  lightness: number = 60
+): string =>
+  `hsla(${random(min, max)}, ${saturation}%, ${lightness}%, ${opacity})`;

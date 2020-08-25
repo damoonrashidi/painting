@@ -26,9 +26,12 @@ export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 
+export const average = (a: number, b: number) => (a + b) / 2;
+
 export function init(width: number, height: number): CanvasRenderingContext2D {
   document.body.innerHTML = '';
   const canvas: HTMLCanvasElement = document.createElement('canvas');
+  canvas.setAttribute('id', 'canvas');
   canvas.width = width;
   canvas.height = height;
   document.body.appendChild(canvas);
