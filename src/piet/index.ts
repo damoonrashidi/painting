@@ -10,6 +10,7 @@ interface Square {
   width: number;
   height: number;
   color: string;
+  rootColor: number;
 }
 
 interface Vector2D {
@@ -18,48 +19,55 @@ interface Vector2D {
 }
 
 function splitSquare(parent: Square): Square {
-  const pointPos = random(parent.x, parent.x + parent.width);
+  const randomXInParent = random(parent.x, parent.x + parent.width);
+  const randomYInParent = random(parent.y, parent.y + parent.height);
 
   const point = {
-    x: pointPos,
-    y: pointPos,
+    x: randomXInParent,
+    y: randomYInParent,
   };
+
+  const color = parent.rootColor + random(-50, 50);
   const children: Square[] = [
     {
       depth: parent.depth + 1,
       x: parent.x,
       y: parent.y,
-      width: point.x - parent.x,
-      height: point.y - parent.y,
+      width: Math.abs(point.x - parent.x),
+      height: Math.abs(parent.y - point.y),
       children: [],
-      color: randomHue(300, 350, 0.5, 80, 70),
+      rootColor: parent.rootColor + random(-50, 50, true),
+      color: randomHue(color - 20, color + 20, 1, 80, 60),
     },
     {
       depth: parent.depth + 1,
       x: point.x,
       y: parent.y,
-      width: parent.width - point.x,
-      height: point.y - parent.y,
+      width: Math.abs(parent.width - point.x),
+      height: Math.abs(point.y - parent.y),
       children: [],
-      color: randomHue(300, 350, 0.5, 80, 70),
+      rootColor: parent.rootColor + random(-50, 50, true),
+      color: randomHue(color - 20, color + 20, 1, 80, 60),
     },
     {
       depth: parent.depth + 1,
       x: parent.x,
       y: point.y,
-      width: point.x - parent.x,
-      height: parent.height - point.y,
+      width: Math.abs(point.x - parent.x),
+      height: Math.abs(parent.height - point.y),
       children: [],
-      color: randomHue(300, 350, 0.5, 80, 70),
+      rootColor: parent.rootColor + random(-50, 50, true),
+      color: randomHue(color - 20, color + 20, 1, 80, 60),
     },
     {
       depth: parent.depth + 1,
       x: point.x,
       y: point.y,
-      width: parent.width - point.x,
-      height: parent.height - point.y,
+      width: Math.abs(parent.width - point.x),
+      height: Math.abs(parent.height - point.y),
       children: [],
-      color: randomHue(300, 350, 0.5, 80, 70),
+      rootColor: parent.rootColor + random(-50, 50, true),
+      color: randomHue(color - 20, color + 20, 1, 80, 60),
     },
   ];
 
@@ -70,16 +78,17 @@ function splitSquare(parent: Square): Square {
 }
 
 function drawSquare(ctx: CanvasRenderingContext2D, square: Square): void {
-  ctx.lineWidth = 10;
   ctx.fillStyle = square.color;
   ctx.beginPath();
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = (1 / (square.depth + 1)) * 10;
   ctx.rect(square.x, square.y, square.width, square.height);
-  ctx.stroke();
   ctx.fill();
+  ctx.stroke();
   ctx.closePath();
 
   for (let child of square.children) {
-    if (square.depth < 2) {
+    if (square.depth < 7 && random(0, 1, false) > 0.5) {
       child = splitSquare(child);
     }
     drawSquare(ctx, child);
@@ -96,6 +105,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
     y: 0,
     width: WIDTH,
     height: HEIGHT,
+    rootColor: 300,
     color: '#333',
   };
 
