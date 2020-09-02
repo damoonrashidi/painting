@@ -67,6 +67,16 @@ export function middle([x1, y1]: number[], [x2, y2]: number[]): number[] {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
 
+export function pointAlong(
+  [x1, y1]: [number, number],
+  [x2, y2]: [number, number]
+): [number, number] {
+  return [
+    Math.abs(x2 - x1) * random(0, 1, false) + Math.min(x1, x2),
+    Math.abs(y2 - y1) * random(0, 1, false) + Math.min(y1, y2),
+  ];
+}
+
 export function distort({
   coords,
   jitter,

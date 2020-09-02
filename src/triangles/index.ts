@@ -1,52 +1,103 @@
-import { init, randomHue, random, middle } from '../lib';
+import { init, randomHue, random, middle, pointAlong } from '../lib';
 const WIDTH = 3000;
 const HEIGHT = 3000;
 
 type Vector2D = [number, number];
-type Triangle = [Vector2D, Vector2D, Vector2D];
+interface Triangle {
+  coords: [Vector2D, Vector2D, Vector2D];
+  depth: number;
+  color: string;
+  hue: number;
+}
+
+const makeTriangle = (baseTriangle?: Partial<Triangle>): Triangle => ({
+  coords: [
+    [0, 0],
+    [WIDTH, 0],
+    [WIDTH, HEIGHT],
+  ],
+  hue: 150,
+  depth: 0,
+  color: '#f00',
+  ...baseTriangle,
+});
 
 const splitTriangle = (triangle: Triangle): Triangle[] => {
-  const a = random(0, 2, true);
+  const a = random(1, 3, true) % 3;
   const b = (a + 1) % 3;
   const c = (b + 1) % 3;
 
-  const d = middle(triangle[b], triangle[c]);
+  const d = middle(triangle.coords[b], triangle.coords[c]);
 
   return [
-    [triangle[a], [d[0], d[1]], triangle[b]],
-    [triangle[a], triangle[c], [d[0], d[1]]],
+    makeTriangle({
+      hue: triangle.hue + random(-10, 10, true),
+      coords: [triangle.coords[a], [d[0], d[1]], triangle.coords[b]],
+      depth: triangle.depth - 1 - random(0, 1, true),
+      color: randomHue(200, 360, 1, random(40, 70), random(50, 100, false)),
+    }),
+    makeTriangle({
+      hue: triangle.hue + random(-10, 10, true),
+      coords: [triangle.coords[a], triangle.coords[c], [d[0], d[1]]],
+      depth: triangle.depth - 1 - random(0, 1, true),
+      color: randomHue(200, 360, 1, random(40, 70), random(50, 100, false)),
+    }),
   ];
 };
 
 function drawTriangle(ctx: CanvasRenderingContext2D, triangle: Triangle): void {
   ctx.beginPath();
-  ctx.moveTo(...triangle[0]);
-  for (const line of triangle) {
+  ctx.moveTo(...triangle.coords[0]);
+  for (const line of triangle.coords) {
     ctx.lineTo(...line);
   }
-  ctx.lineTo(...triangle[0]);
+  ctx.lineTo(...triangle.coords[0]);
+  ctx.fillStyle = triangle.color;
+  ctx.fill();
   ctx.stroke();
   ctx.closePath();
 }
 
+const makeRandom = (coords: [Vector2D, Vector2D, Vector2D]) =>
+  makeTriangle({
+    coords,
+    depth: random(50, 4000, true),
+  });
+
 const paint = (ctx: CanvasRenderingContext2D) => {
-  const rootTriangle: Triangle = [
-    [WIDTH / 2, 0],
-    [WIDTH, HEIGHT],
-    [0, HEIGHT],
+  const roots: Triangle[] = [
+    makeRandom([
+      [0, 0],
+      [WIDTH / 2, HEIGHT / 3],
+      [WIDTH, 0],
+    ]),
+    makeRandom([
+      [0, 0],
+      [WIDTH / 2, HEIGHT / 3],
+      [0, HEIGHT / 2],
+    ]),
+    makeRandom([
+      [WIDTH, 0],
+      [WIDTH * 0.75, HEIGHT / 3],
+      [WIDTH * 1, HEIGHT / 3],
+    ]),
+    makeRandom([
+      [WIDTH, 0],
+      [WIDTH / 2, HEIGHT / 3],
+      [WIDTH * 1, HEIGHT / 3],
+    ]),
   ];
 
-  let triangles = [rootTriangle];
-
-  for (let i = 0; i < 20; i++) {
-    if (random(0, 1, false) > 0.5) {
-      triangles = triangles
-        .map(splitTriangle)
-        .reduce((list, sublist) => list.concat(sublist));
+  roots.forEach(rootTriangle => {
+    let triangles = [rootTriangle];
+    for (let i = 0; i < triangles[0].depth; i++) {
+      if (triangles[i].depth > 0 || random(0, 1, false) > 0.5) {
+        const subTriangles = splitTriangle(triangles[i]);
+        triangles.push(...subTriangles);
+      }
     }
-  }
-
-  triangles.forEach(triangle => drawTriangle(ctx, triangle));
+    triangles.forEach(triangle => drawTriangle(ctx, triangle));
+  });
 };
 
 setTimeout(() => {
