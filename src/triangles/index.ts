@@ -10,6 +10,23 @@ interface Triangle {
   hue: number;
 }
 
+const randomPointInTriangle = (coords: Triangle['coords']): Vector2D => {
+  let a = random(0, 1, false);
+  let b = random(0, 1, false);
+
+  if (a + b > 1) {
+    a = 1 - a;
+    b = 1 - b;
+  }
+
+  let c = 1 - a - b;
+
+  const x = a * coords[0][0] + b * coords[1][0] + c * coords[2][0];
+  const y = a * coords[0][1] + b * coords[1][1] + c * coords[2][1];
+
+  return [x, y];
+};
+
 const makeTriangle = (baseTriangle?: Partial<Triangle>): Triangle => ({
   coords: [
     [0, 0],
@@ -40,22 +57,32 @@ const splitTriangle = (triangle: Triangle): Triangle[] => {
       hue: triangle.hue + random(-10, 10, true),
       coords: [triangle.coords[a], triangle.coords[c], [d[0], d[1]]],
       depth: triangle.depth - 1 - random(0, 1, true),
-      color: randomHue(200, 360, 1, random(40, 70), random(50, 100, false)),
+      color: randomHue(0, 360, 1, random(40, 70), random(50, 100, false)),
     }),
   ];
 };
 
 function drawTriangle(ctx: CanvasRenderingContext2D, triangle: Triangle): void {
-  ctx.beginPath();
   ctx.moveTo(...triangle.coords[0]);
   for (const line of triangle.coords) {
     ctx.lineTo(...line);
   }
   ctx.lineTo(...triangle.coords[0]);
-  ctx.fillStyle = triangle.color;
-  ctx.fill();
-  // ctx.stroke();
   ctx.closePath();
+
+  const density = random(20, 1000);
+  ctx.fillStyle = randomHue(0, 40, 1, 0, random(0, 100, true));
+  const r = random(0, 1, false);
+
+  // let count = 0;
+  for (let i = 0; i < density; i++) {
+    const [x, y] = randomPointInTriangle(triangle.coords);
+    ctx.moveTo(x, y);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+  }
 }
 
 const makeRandom = (coords: [Vector2D, Vector2D, Vector2D], depth?: number) =>
@@ -68,9 +95,9 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [
     makeRandom(
       [
-        [WIDTH * 0.5, HEIGHT * 0.25],
-        [WIDTH * 0.85, HEIGHT * 0.75],
-        [WIDTH * 0.15, HEIGHT * 0.75],
+        [WIDTH * 0.5, HEIGHT * 0.2],
+        [WIDTH * 0.95, HEIGHT * 0.85],
+        [WIDTH * 0.05, HEIGHT * 0.85],
       ],
       1000
     ),
