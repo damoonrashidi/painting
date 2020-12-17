@@ -27,7 +27,7 @@ const splitTriangle = (triangle: Triangle): Triangle[] => {
   const b = (a + 1) % 3;
   const c = (b + 1) % 3;
 
-  const d = middle(triangle.coords[b], triangle.coords[c]);
+  const d = pointAlong(triangle.coords[b], triangle.coords[c]);
 
   return [
     makeTriangle({
@@ -52,40 +52,52 @@ function drawTriangle(ctx: CanvasRenderingContext2D, triangle: Triangle): void {
     ctx.lineTo(...line);
   }
   ctx.lineTo(...triangle.coords[0]);
-  ctx.fillStyle = triangle.color;
-  ctx.fill();
+  // ctx.fillStyle = triangle.color;
+  // ctx.fill();
   ctx.stroke();
   ctx.closePath();
 }
 
-const makeRandom = (coords: [Vector2D, Vector2D, Vector2D]) =>
+const makeRandom = (coords: [Vector2D, Vector2D, Vector2D], depth?: number) =>
   makeTriangle({
     coords,
-    depth: random(50, 4000, true),
+    depth: depth || random(50, 2000, true),
   });
 
 const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [
-    makeRandom([
-      [0, 0],
-      [WIDTH / 2, HEIGHT / 3],
-      [WIDTH, 0],
-    ]),
-    makeRandom([
-      [0, 0],
-      [WIDTH / 2, HEIGHT / 3],
-      [0, HEIGHT / 2],
-    ]),
-    makeRandom([
-      [WIDTH, 0],
-      [WIDTH * 0.75, HEIGHT / 3],
-      [WIDTH * 1, HEIGHT / 3],
-    ]),
-    makeRandom([
-      [WIDTH, 0],
-      [WIDTH / 2, HEIGHT / 3],
-      [WIDTH * 1, HEIGHT / 3],
-    ]),
+    makeRandom(
+      [
+        [0, 0],
+        [0, HEIGHT / 2],
+        [WIDTH / 2, 0],
+      ],
+      1000
+    ),
+    makeRandom(
+      [
+        [WIDTH / 2, 0],
+        [WIDTH, 0],
+        [WIDTH, HEIGHT / 2],
+      ],
+      1000
+    ),
+    makeRandom(
+      [
+        [WIDTH, HEIGHT / 2],
+        [WIDTH, HEIGHT],
+        [WIDTH / 2, HEIGHT],
+      ],
+      1000
+    ),
+    makeRandom(
+      [
+        [0, HEIGHT],
+        [WIDTH / 2, HEIGHT],
+        [0, HEIGHT / 2],
+      ],
+      1000
+    ),
   ];
 
   roots.forEach(rootTriangle => {
