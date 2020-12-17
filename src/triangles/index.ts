@@ -1,6 +1,6 @@
 import { init, randomHue, random, middle, pointAlong } from '../lib';
-const WIDTH = 3000;
-const HEIGHT = 3000;
+const WIDTH = 2160;
+const HEIGHT = 3840;
 
 type Vector2D = [number, number];
 interface Triangle {
@@ -52,9 +52,9 @@ function drawTriangle(ctx: CanvasRenderingContext2D, triangle: Triangle): void {
     ctx.lineTo(...line);
   }
   ctx.lineTo(...triangle.coords[0]);
-  // ctx.fillStyle = triangle.color;
-  // ctx.fill();
-  ctx.stroke();
+  ctx.fillStyle = triangle.color;
+  ctx.fill();
+  // ctx.stroke();
   ctx.closePath();
 }
 
@@ -68,33 +68,9 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [
     makeRandom(
       [
-        [0, 0],
-        [0, HEIGHT / 2],
-        [WIDTH / 2, 0],
-      ],
-      1000
-    ),
-    makeRandom(
-      [
-        [WIDTH / 2, 0],
-        [WIDTH, 0],
-        [WIDTH, HEIGHT / 2],
-      ],
-      1000
-    ),
-    makeRandom(
-      [
-        [WIDTH, HEIGHT / 2],
-        [WIDTH, HEIGHT],
-        [WIDTH / 2, HEIGHT],
-      ],
-      1000
-    ),
-    makeRandom(
-      [
-        [0, HEIGHT],
-        [WIDTH / 2, HEIGHT],
-        [0, HEIGHT / 2],
+        [WIDTH * 0.5, HEIGHT * 0.25],
+        [WIDTH * 0.85, HEIGHT * 0.75],
+        [WIDTH * 0.15, HEIGHT * 0.75],
       ],
       1000
     ),
