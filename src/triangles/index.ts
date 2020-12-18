@@ -70,11 +70,10 @@ function drawTriangle(ctx: CanvasRenderingContext2D, triangle: Triangle): void {
   ctx.lineTo(...triangle.coords[0]);
   ctx.closePath();
 
-  const density = random(20, 1000);
-  ctx.fillStyle = randomHue(0, 40, 1, 0, random(0, 100, true));
+  ctx.fillStyle = randomHue(0, 0, 1, 0, random(0, 15, true));
   const r = random(0, 1, false);
+  const density = random(50, 500);
 
-  // let count = 0;
   for (let i = 0; i < density; i++) {
     const [x, y] = randomPointInTriangle(triangle.coords);
     ctx.moveTo(x, y);
@@ -95,14 +94,39 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [
     makeRandom(
       [
-        [WIDTH * 0.5, HEIGHT * 0.2],
-        [WIDTH * 0.95, HEIGHT * 0.85],
-        [WIDTH * 0.05, HEIGHT * 0.85],
+        [WIDTH * 0.01, HEIGHT * 0.2],
+        [WIDTH * 0.25, HEIGHT * 0.3],
+        [WIDTH * 0.05, HEIGHT * 0.45],
+      ],
+      200
+    ),
+    makeRandom(
+      [
+        [WIDTH * 0.25, HEIGHT * 0.3],
+        [WIDTH * 0.45, HEIGHT * 0.4],
+        [WIDTH * 0.1, HEIGHT * 0.45],
+      ],
+      100
+    ),
+    makeRandom(
+      [
+        [WIDTH * 0.1, HEIGHT * 0.65],
+        [WIDTH * 0.73, HEIGHT * 0.2],
+        [WIDTH * 0.85, HEIGHT * 0.75],
       ],
       1000
     ),
+    makeRandom(
+      [
+        [WIDTH * 0.73, HEIGHT * 0.2],
+        [WIDTH, 0],
+        [WIDTH, HEIGHT * 0.4],
+      ],
+      500
+    ),
   ];
 
+  console.time('Triangle');
   roots.forEach(rootTriangle => {
     let triangles = [rootTriangle];
     for (let i = 0; i < triangles[0].depth; i++) {
@@ -113,11 +137,12 @@ const paint = (ctx: CanvasRenderingContext2D) => {
     }
     triangles.forEach(triangle => drawTriangle(ctx, triangle));
   });
+  console.timeEnd('Triangle');
 };
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fdfff5';
+  ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 });
