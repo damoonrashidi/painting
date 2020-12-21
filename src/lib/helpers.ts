@@ -28,10 +28,17 @@ export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 
 export const average = (a: number, b: number) => (a + b) / 2;
 
-export function init(width: number, height: number): CanvasRenderingContext2D {
-  document.body.innerHTML = '';
+export function init(
+  width: number,
+  height: number,
+  clear = true,
+  id = 'canvas'
+): CanvasRenderingContext2D {
+  if (clear) {
+    document.body.innerHTML = '';
+  }
   const canvas: HTMLCanvasElement = document.createElement('canvas');
-  canvas.setAttribute('id', 'canvas');
+  canvas.setAttribute('id', id);
   canvas.width = width;
   canvas.height = height;
   document.body.appendChild(canvas);

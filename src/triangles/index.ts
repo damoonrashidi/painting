@@ -116,28 +116,39 @@ const paint = (ctx: CanvasRenderingContext2D) => {
       ],
       1000
     ),
-    makeRandom(
-      [
-        [WIDTH * 0.73, HEIGHT * 0.2],
-        [WIDTH, 0],
-        [WIDTH, HEIGHT * 0.4],
-      ],
-      500
-    ),
   ];
 
-  console.time('Triangle');
-  roots.forEach(rootTriangle => {
-    let triangles = [rootTriangle];
-    for (let i = 0; i < triangles[0].depth; i++) {
-      if (triangles[i].depth > 0 || random(0, 1, false) > 0.5) {
-        const subTriangles = splitTriangle(triangles[i]);
-        triangles.push(...subTriangles);
+  let y = 0;
+  let x = 0;
+  while (y < HEIGHT) {
+    const stackHeight = random(20, 200, false);
+    const r = random(1, 2);
+    const spacing = random(1, 4);
+
+    for (let _y = y; _y < y + stackHeight; _y++) {
+      for (let _x = 0; _x < WIDTH; _x += spacing) {
+        ctx.moveTo(_x, _y);
+        ctx.arc(_x, _y, r, 0, Math.PI);
+        ctx.fillStyle = '#000';
+        ctx.fill();
       }
     }
-    triangles.forEach(triangle => drawTriangle(ctx, triangle));
-  });
-  console.timeEnd('Triangle');
+
+    y += stackHeight;
+
+    console.log(y);
+  }
+
+  // roots.forEach(rootTriangle => {
+  //   let triangles = [rootTriangle];
+  //   for (let i = 0; i < triangles[0].depth; i++) {
+  //     if (triangles[i].depth > 0 || random(0, 1, false) > 0.5) {
+  //       const subTriangles = splitTriangle(triangles[i]);
+  //       triangles.push(...subTriangles);
+  //     }
+  //   }
+  //   triangles.forEach(triangle => drawTriangle(ctx, triangle));
+  // });
 };
 
 setTimeout(() => {
