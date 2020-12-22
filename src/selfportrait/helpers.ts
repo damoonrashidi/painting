@@ -31,10 +31,12 @@ export function createStack(
     ];
   }
 
-  ctx.moveTo(points[0][0], points[0][1]);
   const [toX, toY] = [x + random(-500, 500), y + random(-500, 500)];
   const cp1 = { x: toX - random(-500, 500), y: y - random(-500, 500) };
   const cp2 = { x: x - random(-500, 500), y: toY - random(500, 500) };
+
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
   ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, toX, toY);
   ctx.strokeStyle = color;
   ctx.lineWidth = random(2, 8);
@@ -51,6 +53,4 @@ export function createStack(
   ctx.fillStyle = color;
   region.closePath();
   ctx.fill(region);
-
-  ctx.beginPath();
 }

@@ -34,9 +34,6 @@ const paint = (
   let y = 0;
   let column = 1;
 
-  // ctx.rotate(0.35);
-  // ctx.translate(-100, -1100);
-
   for (let i = 0; i < 120000; i++) {
     if (y >= STACK_HEIGHT * 200) {
       x += STACK_WIDTH;
@@ -48,9 +45,6 @@ const paint = (
     createStack(ctx, x, y, column % 2 === 0, color, STACK_WIDTH, STACK_HEIGHT);
     y += STACK_HEIGHT / 2 + 1;
   }
-
-  // ctx.rotate(-0.35);
-  // ctx.translate(-270, 1100);
 };
 
 setTimeout(() => {
