@@ -7,6 +7,8 @@ export function random(min: number = 0, max: number = 100, rounded = true) {
     : Math.random() * (max - min) + min;
 }
 
+export type Vector2D = [number, number];
+
 interface DistortOptions {
   coords: number[][];
   jitter: number;
@@ -27,6 +29,40 @@ export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 
 export const average = (a: number, b: number) => (a + b) / 2;
+
+export function paintGrid(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  { showNumbers }: { showNumbers: boolean }
+): void {
+  const stepsX = width / 10;
+  const stepsY = height / 20;
+  ctx.font = `20px sans-serif`;
+
+  for (let y = 0; y < height; y += stepsY) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.strokeStyle = '#ddd';
+    ctx.stroke();
+    ctx.closePath();
+
+    for (let x = 0; x < width; x += stepsX) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.strokeStyle = '#ddd';
+      ctx.stroke();
+      ctx.closePath();
+
+      if (showNumbers) {
+        ctx.fillStyle = '#f00';
+        ctx.fillText(`${Math.round(x)} : ${Math.round(y)}`, x, y);
+      }
+    }
+  }
+}
 
 export function init(
   width: number,
@@ -98,6 +134,20 @@ export function distort({
   distorted.push([WIDTH, height]);
   distorted.push([0, height]);
   return distorted;
+}
+
+export function distort2(
+  points: number[][],
+  jitter = 5,
+  iteration = 0
+): number[][] {
+  let newPoints: number[][] = [];
+  points.forEach((point, i) => {
+    newPoints.push(point);
+    const [x, y] = middle(points[i], points[i + 1] || points[0]);
+    newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
+  });
+  return iteration > 5 ? points : distort2(newPoints, jitter, iteration + 1);
 }
 
 function addLightsTo(scene: THREE.Scene) {

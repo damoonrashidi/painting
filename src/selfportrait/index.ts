@@ -1,10 +1,10 @@
-import { init, random, randomHue } from '../lib';
+import { init, random, randomHue, paintGrid } from '../lib';
 import { createStack } from './helpers';
 
 const WIDTH = 2464;
 const HEIGHT = 3280;
-const STACK_WIDTH = 30;
-const STACK_HEIGHT = 50;
+const STACK_WIDTH = 120;
+const STACK_HEIGHT = 120;
 
 const getColor = (
   ref: CanvasRenderingContext2D,
@@ -32,19 +32,23 @@ const paint = (
 ) => {
   let x = 0;
   let y = 0;
-  let column = 1;
 
-  for (let i = 0; i < 120000; i++) {
+  const numberOfStacks = 8000;
+  for (let i = 0; i < numberOfStacks; i++) {
     if (y >= STACK_HEIGHT * 200) {
       x += STACK_WIDTH;
       y = 0;
-      column++;
     }
     const color = getColor(ref, x, y);
 
-    createStack(ctx, x, y, column % 2 === 0, color, STACK_WIDTH, STACK_HEIGHT);
+    if (i % 500 === 0) {
+      console.log(`at stack ${i} of ${numberOfStacks}`);
+    }
+
+    createStack(ctx, x, y, color, STACK_WIDTH, STACK_HEIGHT);
     y += STACK_HEIGHT / 2 + 1;
   }
+  // paintGrid(ctx, WIDTH, HEIGHT);
 };
 
 setTimeout(() => {
