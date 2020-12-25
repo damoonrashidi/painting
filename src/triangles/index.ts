@@ -94,22 +94,6 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [
     makeRandom(
       [
-        [WIDTH * 0.01, HEIGHT * 0.2],
-        [WIDTH * 0.25, HEIGHT * 0.3],
-        [WIDTH * 0.05, HEIGHT * 0.45],
-      ],
-      200
-    ),
-    makeRandom(
-      [
-        [WIDTH * 0.25, HEIGHT * 0.3],
-        [WIDTH * 0.45, HEIGHT * 0.4],
-        [WIDTH * 0.1, HEIGHT * 0.45],
-      ],
-      100
-    ),
-    makeRandom(
-      [
         [WIDTH * 0.1, HEIGHT * 0.65],
         [WIDTH * 0.73, HEIGHT * 0.2],
         [WIDTH * 0.85, HEIGHT * 0.75],
@@ -118,37 +102,18 @@ const paint = (ctx: CanvasRenderingContext2D) => {
     ),
   ];
 
-  let y = 0;
-  let x = 0;
-  while (y < HEIGHT) {
-    const stackHeight = random(20, 200, false);
-    const r = random(1, 2);
-    const spacing = random(1, 4);
-
-    for (let _y = y; _y < y + stackHeight; _y++) {
-      for (let _x = 0; _x < WIDTH; _x += spacing) {
-        ctx.moveTo(_x, _y);
-        ctx.arc(_x, _y, r, 0, Math.PI);
-        ctx.fillStyle = '#000';
-        ctx.fill();
+  console.time('Triangle');
+  roots.forEach(rootTriangle => {
+    let triangles = [rootTriangle];
+    for (let i = 0; i < triangles[0].depth; i++) {
+      if (triangles[i].depth > 0 || random(0, 1, false) > 0.5) {
+        const subTriangles = splitTriangle(triangles[i]);
+        triangles.push(...subTriangles);
       }
     }
-
-    y += stackHeight;
-
-    console.log(y);
-  }
-
-  // roots.forEach(rootTriangle => {
-  //   let triangles = [rootTriangle];
-  //   for (let i = 0; i < triangles[0].depth; i++) {
-  //     if (triangles[i].depth > 0 || random(0, 1, false) > 0.5) {
-  //       const subTriangles = splitTriangle(triangles[i]);
-  //       triangles.push(...subTriangles);
-  //     }
-  //   }
-  //   triangles.forEach(triangle => drawTriangle(ctx, triangle));
-  // });
+    triangles.forEach(triangle => drawTriangle(ctx, triangle));
+  });
+  console.timeEnd('Triangle');
 };
 
 setTimeout(() => {
