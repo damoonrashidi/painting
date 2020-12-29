@@ -1,120 +1,47 @@
-import { init, randomHue, random } from '../lib';
-const WIDTH = 3000;
-const HEIGHT = 3000;
+import { init, randomHue, randomFloat, randomInt, Vector2D } from '../lib';
+import { Square, drawSquare, fillSquare, splitSquares, Split } from './helpers';
 
-interface Square {
-  children: Square[];
-  depth: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  color: string;
-  rootColor: number;
-}
+// const [WIDTH, HEIGHT] = [11811, 17717];
+const [WIDTH, HEIGHT] = [2160, 3890];
 
-interface Vector2D {
-  x: number;
-  y: number;
-}
-
-function splitSquare(parent: Square): Square {
-  const randomXInParent = random(parent.x, parent.x + parent.width);
-  const randomYInParent = random(parent.y, parent.y + parent.height);
-
-  const point = {
-    x: randomXInParent,
-    y: randomYInParent,
-  };
-
-  const color = parent.rootColor + random(-50, 50);
-  const children: Square[] = [
+function paint(ctx: CanvasRenderingContext2D): void {
+  let squares: Square[] = [
     {
-      depth: parent.depth + 1,
-      x: parent.x,
-      y: parent.y,
-      width: Math.abs(point.x - parent.x),
-      height: Math.abs(parent.y - point.y),
-      children: [],
-      rootColor: parent.rootColor + random(-50, 50, true),
-      color: randomHue(color - 20, color + 20, 1, 80, 60),
-    },
-    {
-      depth: parent.depth + 1,
-      x: point.x,
-      y: parent.y,
-      width: Math.abs(parent.width - point.x),
-      height: Math.abs(point.y - parent.y),
-      children: [],
-      rootColor: parent.rootColor + random(-50, 50, true),
-      color: randomHue(color - 20, color + 20, 1, 80, 60),
-    },
-    {
-      depth: parent.depth + 1,
-      x: parent.x,
-      y: point.y,
-      width: Math.abs(point.x - parent.x),
-      height: Math.abs(parent.height - point.y),
-      children: [],
-      rootColor: parent.rootColor + random(-50, 50, true),
-      color: randomHue(color - 20, color + 20, 1, 80, 60),
-    },
-    {
-      depth: parent.depth + 1,
-      x: point.x,
-      y: point.y,
-      width: Math.abs(parent.width - point.x),
-      height: Math.abs(parent.height - point.y),
-      children: [],
-      rootColor: parent.rootColor + random(-50, 50, true),
-      color: randomHue(color - 20, color + 20, 1, 80, 60),
+      x: 150,
+      y: 150,
+      width: WIDTH - 300,
+      height: HEIGHT - 300,
     },
   ];
 
-  return {
-    ...parent,
-    children,
-  };
-}
+  /**
+   * Set the inside of the Piet to white
+   */
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(150, 150, WIDTH - 300, HEIGHT - 300);
 
-function drawSquare(ctx: CanvasRenderingContext2D, square: Square): void {
-  ctx.fillStyle = square.color;
-  ctx.beginPath();
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = (1 / (square.depth + 1)) * 10;
-  ctx.rect(square.x, square.y, square.width, square.height);
-  ctx.fill();
-  ctx.stroke();
-  ctx.closePath();
+  /**
+   * Create all the squares
+   */
+  for (let i = 0; i < 40; i++) {
+    const point: Vector2D = [
+      randomInt(150, WIDTH - 150),
+      randomInt(150, HEIGHT - 150),
+    ];
 
-  for (let child of square.children) {
-    if (square.depth < 7 && random(0, 1, false) > 0.5) {
-      child = splitSquare(child);
-    }
-    drawSquare(ctx, child);
+    squares = splitSquares(squares, point);
   }
+
+  squares.forEach(square => drawSquare(ctx, square));
+  const randomSquares = squares.filter(() => randomFloat() > 0.8);
+  randomSquares.forEach(square => fillSquare(ctx, square));
 }
-
-const paint = (ctx: CanvasRenderingContext2D) => {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  const rootSquare: Square = {
-    children: [],
-    depth: 0,
-    x: 0,
-    y: 0,
-    width: WIDTH,
-    height: HEIGHT,
-    rootColor: 300,
-    color: '#333',
-  };
-
-  drawSquare(ctx, splitSquare(rootSquare));
-};
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fdfff5';
+
+  ctx.fillStyle = '#fff';
+
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 });

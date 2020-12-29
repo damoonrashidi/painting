@@ -7,6 +7,14 @@ export function random(min: number = 0, max: number = 100, rounded = true) {
     : Math.random() * (max - min) + min;
 }
 
+export function randomInt(min: number = 0, max: number = 100) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+export function randomFloat(min: number = 0, max: number = 1) {
+  return Math.random() * (max - min) + min;
+}
+
 export type Vector2D = [number, number];
 
 interface DistortOptions {
