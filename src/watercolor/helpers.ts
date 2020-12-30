@@ -1,68 +1,60 @@
-import { randomHue } from './colors';
+import { randomFloat, Vector2D, randomHue, randomInt } from '../lib';
 
-export function init(width: number, height: number): CanvasRenderingContext2D {
-  document.body.innerHTML = '';
-  const canvas: HTMLCanvasElement = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  document.body.appendChild(canvas);
-  let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-  ctx.imageSmoothingEnabled = true;
-  return ctx;
-}
-
-export function random(min: number = 0, max: number = 100, rounded = true) {
-  return rounded
-    ? Math.floor(Math.random() * (max - min) + min)
-    : Math.random() * (max - min) + min;
-}
-
-export function middle([x1, y1]: number[], [x2, y2]: number[]): number[] {
+export function middle([x1, y1]: Vector2D, [x2, y2]: Vector2D): Vector2D {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
 
+function distortPoint(
+  ctx: CanvasRenderingContext2D,
+  [x1, y1]: Vector2D,
+  [x2, y2]: Vector2D
+): Vector2D {
+  const [cx, cy] = middle([x1, y1], [x2, y2]);
+  let radians = (randomInt(-100, 100) * Math.PI) / 180;
+
+  // if (y2 > y1) {
+  //   radians = (randomFloat(40, 50) * Math.PI) / 180;
+  // }
+
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const nx = cos * (x1 - cx) + sin * (y1 - cy) + cx;
+  const ny = cos * (y1 - cy) - sin * (x1 - cx) + cy;
+  return [nx, ny];
+}
+
 export function distort(
-  points: number[][],
-  jitter = 5,
-  iteration = 0
-): number[][] {
-  let newPoints: number[][] = [];
-  points.forEach((point, i) => {
-    newPoints.push(point);
-    const [x, y] = middle(points[i], points[i + 1] || points[0]);
-    newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
+  ctx: CanvasRenderingContext2D,
+  shape: Vector2D[]
+): Vector2D[] {
+  const distorted: Vector2D[] = [];
+  for (let i = 0; i < shape.length; i++) {
+    const point = shape[i];
+    const next = shape[i + 1] ? shape[i + 1] : shape[0];
+
+    const [x, y] = distortPoint(ctx, point, next);
+
+    distorted.push(point);
+    distorted.push([x, y]);
+  }
+
+  return distorted;
+}
+
+export function drawPath(
+  ctx: CanvasRenderingContext2D,
+  path: Vector2D[],
+  color: string
+): void {
+  ctx.beginPath();
+  ctx.moveTo(...path[0]);
+  ctx.fillStyle = '#f00';
+  path.forEach(point => {
+    ctx.lineTo(...point);
   });
-  return iteration > 5 ? points : distort(newPoints, jitter, iteration + 1);
-}
+  ctx.lineTo(...path[0]);
+  ctx.fillStyle = color;
+  ctx.fill();
 
-export function rotateRandomlyAroundCenter(
-  ctx: CanvasRenderingContext2D,
-  model: number[][]
-) {
-  const point = middle(model[0], model[Math.round(model.length / 2)]);
-  ctx.translate(point[0] + random(-100, 100), point[1] + random(-100, 100));
-  ctx.rotate((random(-180, 180) * Math.PI) / 180);
-  ctx.translate(-point[0] + random(-100, 100), -point[1] + random(-100, 100));
-  ctx.moveTo(model[0][0], model[0][1]);
-}
-
-export function paintGrid(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  n: number
-) {
-  for (let i = 0; i < n; i++) {
-    ctx.strokeStyle = randomHue(310, 350, 0.05);
-    const x = (i * width) / n;
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-  }
-  for (let i = 0; i < n * 1.5; i++) {
-    ctx.strokeStyle = randomHue(310, 350, 0.05);
-    const y = (i * height) / (n * 1.5);
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-  }
-  ctx.stroke();
+  ctx.closePath();
 }

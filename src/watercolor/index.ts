@@ -1,93 +1,49 @@
-import { init, random, distort, rotateRandomlyAroundCenter } from './helpers';
-import { randomHue } from './colors';
-const [WIDTH, HEIGHT] = [800 * 4, 800 * 4];
-let ctx: CanvasRenderingContext2D;
+import { distort, drawPath } from './helpers';
+import { init, paintGrid, Vector2D, randomHue, randomFloat } from '../lib';
+const [WIDTH, HEIGHT] = [2000, 2000];
 
-interface PaintConfig {
-  points: number[][];
-  colors: [number, number];
-  blur: [number, number];
-  opacity: [number, number];
-  distortion: number;
-  layers: number;
-}
+const paint = (ctx: CanvasRenderingContext2D) => {
+  // paintGrid(ctx, WIDTH, HEIGHT, { showNumbers: true });
 
-const paintDistortion = (config: PaintConfig, i = 0) => {
-  const { points, colors, blur, opacity, distortion, layers } = config;
-  let distorted = distort(points, distortion);
+  const shape: Vector2D[] = [
+    [600, 600],
+    [1200, 600],
+    [1400, 800],
+    [1400, 1300],
+    [1200, 1600],
+    [600, 1600],
+    [400, 1300],
+    [400, 800],
+    [600, 600],
+  ];
 
-  ctx.globalCompositeOperation = 'darken';
+  const layers = Array(30)
+    .fill(shape)
+    .map(layer => {
+      for (let i = 0; i < 10; i++) {
+        layer = distort(ctx, layer);
+      }
+      return layer;
+    });
 
-  ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.beginPath();
+  ctx.globalCompositeOperation = 'multiply';
 
-  rotateRandomlyAroundCenter(ctx, distorted);
-  paintModel(distorted, blur, opacity, colors);
-
-  ctx.closePath();
-  ctx.restore();
-
-  if (i < layers - 1) {
-    requestAnimationFrame(() =>
-      paintDistortion(
-        { points, colors, blur, opacity, distortion, layers },
-        i + 1
-      )
-    );
-  }
-};
-
-const paint = () => {
-  // paintGrid(ctx, WIDTH, HEIGHT, 25);
-
-  let [w, h] = [WIDTH / 2, HEIGHT / 4.5];
-  let [x, y] = [WIDTH / 2 - w / 2, HEIGHT / 2 - h / 4];
-  paintDistortion({
-    blur: [2, 30],
-    colors: [310, 360],
-    distortion: 30,
-    layers: 80,
-    opacity: [0.0, 0.1],
-    points: [
-      [x * 1.25, y * 0.5],
-      [x * 1.5, y * 0.75],
-      [x * 1.5, y * 1.25],
-      [x * 1.25, y * 1.5],
-      [x * 0.75, y * 1.5],
-      [x * 0.5, y * 1.25],
-      [x * 0.5, y * 0.75],
-      [x * 0.55, y * 0.75],
-      [x * 0.75, y * 0.5],
-      [x * 1.25, y * 0.5],
-    ],
-  });
-};
-
-function paintModel(
-  model: number[][],
-  blur: [number, number],
-  opacity: [number, number],
-  colors: [number, number]
-) {
-  for (let i = 0; i < model.length - 1; i++) {
-    const [x, y] = model[i];
-    const [eX, eY] = model[i + 1];
-    ctx.bezierCurveTo(x, y, x + random(-10, 10), y + random(-10, 10), eX, eY);
+  for (let i = 0; i < layers.length; i++) {
+    const shape = layers[i];
+    const color = randomHue(200, 360, randomFloat(0.1, 0.2));
+    ctx.save();
+    ctx.filter = `blur(${randomFloat(5, 15)}px)`;
+    drawPath(ctx, shape, color);
+    ctx.restore();
   }
 
-  ctx.filter = `blur(${random(blur[0], blur[1])}px)`;
-  ctx.fillStyle = randomHue(
-    colors[0],
-    colors[1],
-    random(opacity[0], opacity[1], false)
-  );
-  ctx.fill();
-}
+  // drawPath(ctx, shape);
+  // drawPath(ctx, distorted2);
+};
 
 setTimeout(() => {
-  ctx = init(WIDTH, HEIGHT);
+  const ctx = init(WIDTH, HEIGHT);
   ctx.fillStyle = '#eee';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  paint();
+  paint(ctx);
 }, 0);
