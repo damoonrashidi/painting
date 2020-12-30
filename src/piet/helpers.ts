@@ -43,8 +43,15 @@ export function fillSquare(
   ctx: CanvasRenderingContext2D,
   square: Square
 ): void {
-  const colors = ['#26547c', '#ef476f', '#ffd166', '#06d6a0', '#fffcf9'];
-  const i = randomInt(0, colors.length - 1);
+  const colors = [
+    '#26547c',
+    '#ef476f',
+    '#ffd166',
+    '#06d6a0',
+    '#fffcf9',
+    '#000000',
+  ];
+  const i = randomInt(0, colors.length);
   const color = colors[i];
 
   ctx.beginPath();

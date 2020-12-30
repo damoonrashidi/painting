@@ -31,7 +31,7 @@ function makeTree([startX, startY]: Vector2D, treeHeight: number): Vector2D[] {
   ) {
     for (let b = 0; b < 1000; b++) {
       const topRatio = 1 - branchY / startY;
-      const branchWidth = (topRatio * branchY) / 4;
+      const branchWidth = (topRatio * branchY) / 4 + random(50, 1000);
       const minX = startX - topRatio * branchWidth;
       const maxX = startX + topRatio * branchWidth;
       const y = random(branchY - 10, branchY + 10);
@@ -76,16 +76,16 @@ function createSnow(ctx: CanvasRenderingContext2D): void {
 const paint = (ctx: CanvasRenderingContext2D) => {
   // paintGrid(ctx, WIDTH, HEIGHT, { showNumbers: true });
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 10; i++) {
     const [x, y] = [random(0, WIDTH), random(HEIGHT - 1300, HEIGHT - 1100)];
 
     const tree = makeTree([x, y], 1000);
     paintTree(ctx, tree);
   }
 
-  for (let i = 0; i < 60; i++) {
-    createSnow(ctx);
-  }
+  // for (let i = 0; i < 60; i++) {
+  //   createSnow(ctx);
+  // }
 };
 
 setTimeout(() => {

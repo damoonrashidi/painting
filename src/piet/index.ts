@@ -23,17 +23,30 @@ function paint(ctx: CanvasRenderingContext2D): void {
   /**
    * Create all the squares
    */
-  for (let i = 0; i < 40; i++) {
-    const point: Vector2D = [
-      randomInt(150, WIDTH - 150),
-      randomInt(150, HEIGHT - 150),
-    ];
 
-    squares = splitSquares(squares, point);
+  const points: Vector2D[] = [];
+  let [x, y] = [WIDTH / 2, HEIGHT / 2];
+
+  for (let i = 0; i < 500; i++) {
+    x -= randomInt(100, 200);
+    y -= randomInt(150, 250);
+
+    if (x <= 0) {
+      x = WIDTH;
+    }
+    if (y <= 0) {
+      y = HEIGHT;
+    }
+
+    points.push([x, y]);
   }
 
+  points.forEach(point => {
+    squares = splitSquares(squares, point);
+  });
+
   squares.forEach(square => drawSquare(ctx, square));
-  const randomSquares = squares.filter(() => randomFloat() > 0.8);
+  const randomSquares = squares.filter(() => randomFloat() > 0.9);
   randomSquares.forEach(square => fillSquare(ctx, square));
 }
 
