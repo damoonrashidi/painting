@@ -31,10 +31,10 @@ const paint = () => {
 
   // SUN
   ctx.beginPath();
-  ctx.moveTo(WIDTH * 0.4, 0);
-  ctx.lineTo(WIDTH, 0);
+  ctx.moveTo(WIDTH * 0.65, 0);
+  ctx.lineTo(WIDTH * 0.9, 0);
   ctx.lineTo(WIDTH, HEIGHT);
-  ctx.lineTo(WIDTH * 0.7, HEIGHT);
+  ctx.lineTo(WIDTH * 0.9, HEIGHT);
   ctx.moveTo(WIDTH * 0.4, 0);
   ctx.closePath();
   ctx.fillStyle = '#ffa000';

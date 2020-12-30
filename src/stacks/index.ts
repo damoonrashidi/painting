@@ -1,18 +1,17 @@
 import { init, createStack, random } from './helpers';
 import { randomHue } from './colors';
-const WIDTH = 3000;
-const HEIGHT = 4000;
-const palette = Array(40)
-  .fill(null)
-  .map(() => randomHue(0, 60, 90, random(40, 80)));
+const [WIDTH, HEIGHT] = [11811, 17717];
 
 export function randomColor() {
-  return palette[random(0, palette.length - 1)];
+  const palette = Array(40)
+    .fill(null)
+    .map(() => randomHue(0, 60, 90, random(40, 80)));
+  return palette[random(0, palette.length)];
 }
 
 const paint = (ctx: CanvasRenderingContext2D) => {
-  const STACK_WIDTH = 30;
-  const STACK_HEIGHT = 50;
+  const STACK_WIDTH = 60;
+  const STACK_HEIGHT = 100;
 
   let x = 0;
   let y = 0;
@@ -21,11 +20,11 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   let streakColor = randomColor();
 
   ctx.rotate(0.35);
-  ctx.translate(-100, -1100);
+  ctx.translate(0, -4000);
 
-  for (let i = 0; i < 120000; i++) {
+  for (let i = 0; i < 150000; i++) {
     let color = randomColor();
-    if (y >= STACK_HEIGHT * 200) {
+    if (y >= HEIGHT + 3000) {
       x += STACK_WIDTH;
       y = 0;
       row++;
