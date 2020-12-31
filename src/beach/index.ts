@@ -9,25 +9,28 @@ import {
 } from '../lib';
 import { drawPath } from './helpers';
 
-// const [WIDTH, HEIGHT] = [2160, 3860];
-const [WIDTH, HEIGHT] = [11811, 17717];
-const TOP = 200;
-const BOTTOM = HEIGHT - 200;
+const [WIDTH, HEIGHT] = [2160, 3860];
+// const [WIDTH, HEIGHT] = [11811, 17717];
+const TOP = HEIGHT * 0.05;
+const BOTTOM = HEIGHT * 0.95;
+const DISTORT_OPTION = 0.5;
 
 enum Colors {
   STRIPE = '#f2e8ae',
   SKY = '#4fa8e8',
   CLOUD = '#ffffff',
   SAND = '#ffc685',
+  DARK_SAND = '#e6a050',
   WATER = '#aae9f0',
+  BLACK = '#222',
 }
 
 const paint = (ctx: CanvasRenderingContext2D) => {
   /**
    * Setup
    */
-  const stripeWidth = 30;
-  const stripePadding = 10;
+  const stripeWidth = WIDTH / 120;
+  const stripePadding = stripeWidth / 2;
   const stripesCount = stripeWidth + (stripePadding * 2) / WIDTH;
 
   const stripes: Shape[] = [];
@@ -36,8 +39,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   const sands: Shape[] = [];
   const ticks: Shape[] = [];
   const ocean: Shape[] = [];
+  const blacks: Shape[] = [];
+  const darkSands: Shape[] = [];
 
-  for (let x = 100; x < WIDTH - 100; x += stripePadding + stripeWidth) {
+  for (let x = WIDTH * 0.1; x < WIDTH * 0.9; x += stripePadding + stripeWidth) {
     const stripe: Shape = distort2(
       [
         [x, TOP],
@@ -45,10 +50,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, BOTTOM],
         [x, BOTTOM],
       ],
-      2
+      DISTORT_OPTION / 2
     );
 
-    const skyHeight = randomFloat(5, 15);
+    const skyHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.005);
 
     const sky = distort2(
       [
@@ -57,10 +62,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, TOP + skyHeight],
         [x, TOP + skyHeight],
       ],
-      0.5
+      DISTORT_OPTION / 2
     );
 
-    const cloudHeight = randomFloat(2, 10);
+    const cloudHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.004);
     const cloud: Shape = distort2(
       [
         [x, TOP + skyHeight - 2],
@@ -68,10 +73,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, TOP + skyHeight + cloudHeight],
         [x, TOP + skyHeight + cloudHeight],
       ],
-      1
+      DISTORT_OPTION
     );
 
-    const sandStart = HEIGHT * 0.7 + randomFloat(-50, 50);
+    const sandStart = HEIGHT * 0.7 + randomFloat(0, HEIGHT * 0.01);
     const sand: Shape = distort2(
       [
         [x, sandStart],
@@ -79,10 +84,22 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, BOTTOM],
         [x, BOTTOM],
       ],
-      1
+      DISTORT_OPTION
     );
 
-    const oceanStart = HEIGHT * 0.6 + randomFloat(-20, 20);
+    const darkSandHeight = randomFloat(HEIGHT * 0.01, HEIGHT * 0.03);
+    const darkSand: Shape = distort2(
+      [
+        [x, sandStart],
+        [x + stripeWidth, sandStart],
+        [x + stripeWidth, sandStart + darkSandHeight],
+        [x, sandStart + darkSandHeight],
+      ],
+      DISTORT_OPTION
+    );
+
+    const oceanStart =
+      HEIGHT * 0.6 + randomFloat(HEIGHT * 0.002, HEIGHT * 0.006);
     const water = distort2(
       [
         [x, oceanStart],
@@ -90,10 +107,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, sandStart - 5],
         [x, sandStart - 5],
       ],
-      1
+      DISTORT_OPTION / 5
     );
 
-    const darkWaterHeight = randomFloat(10, 40);
+    const darkWaterHeight = randomFloat(HEIGHT * 0.01, HEIGHT * 0.02);
     const darkWater = distort2(
       [
         [x, oceanStart],
@@ -101,10 +118,10 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, oceanStart + darkWaterHeight],
         [x, oceanStart + darkWaterHeight],
       ],
-      1
+      DISTORT_OPTION
     );
 
-    const foamHeight = randomFloat(2, 5);
+    const foamHeight = cloudHeight;
     const foam = distort2(
       [
         [x, oceanStart + darkWaterHeight],
@@ -112,28 +129,29 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         [x + stripeWidth, oceanStart + darkWaterHeight + foamHeight],
         [x, oceanStart + darkWaterHeight + foamHeight],
       ],
-      1
+      DISTORT_OPTION
     );
 
-    const bottomWaterHeight = randomFloat(10, 20);
-    const bottomWater = distort2(
+    const blackHeight = randomFloat(HEIGHT * 0.001, HEIGHT * 0.004);
+    const black = distort2(
       [
-        [x, BOTTOM - bottomWaterHeight],
-        [x + stripeWidth, BOTTOM - bottomWaterHeight],
+        [x, BOTTOM - blackHeight],
+        [x + stripeWidth, BOTTOM - blackHeight],
         [x + stripeWidth, BOTTOM],
         [x, BOTTOM],
       ],
-      1
+      DISTORT_OPTION
     );
 
     skies.push(sky);
     skies.push(darkWater);
-    skies.push(bottomWater);
+    blacks.push(black);
     stripes.push(stripe);
     clouds.push(cloud);
     clouds.push(foam);
     sands.push(sand);
     ocean.push(water);
+    darkSands.push(darkSand);
   }
 
   /**
@@ -143,10 +161,16 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   sands.forEach(sand => drawPath(ctx, sand, Colors.SAND));
   ocean.forEach(water => drawPath(ctx, water, Colors.WATER));
   clouds.forEach(cloud => drawPath(ctx, cloud, Colors.CLOUD));
-  skies.forEach(sky => drawPath(ctx, sky, randomHue(190, 230, 100, 100, 75)));
+  skies.forEach(sky => drawPath(ctx, sky, randomHue(190, 230, 100, 100, 65)));
+  blacks.forEach(black => drawPath(ctx, black, Colors.BLACK));
+  darkSands.forEach(sand => drawPath(ctx, sand, Colors.DARK_SAND));
 
   for (let i = 0; i < sands.length; i++) {
     const x = sands[i][0][0];
+
+    /**
+     * TICKS to simluate clouds
+     */
 
     if (randomFloat() > 0.7) {
       continue;
@@ -154,7 +178,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
 
     for (let p = 0; p < randomInt(2, 6); p++) {
       const y = randomFloat(TOP, HEIGHT * 0.3);
-      const height = randomFloat(2, 20);
+      const height = randomFloat(HEIGHT * 0.002, HEIGHT * 0.007);
 
       const tick: Shape = distort2(
         [
