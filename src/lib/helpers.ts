@@ -1,6 +1,3 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
-
 export function random(min: number = 0, max: number = 100, rounded = true) {
   return rounded
     ? Math.floor(Math.random() * (max - min) + min)
@@ -12,10 +9,13 @@ export function randomInt(min: number = 0, max: number = 100) {
 }
 
 export function randomFloat(min: number = 0, max: number = 1) {
-  return Math.random() * (max - min) + min;
+  const r = Math.random() + Math.random() / 2;
+
+  return r * (max - min) + min;
 }
 
 export type Vector2D = [number, number];
+export type Shape = Vector2D[];
 
 interface DistortOptions {
   coords: number[][];
@@ -91,29 +91,6 @@ export function init(
   return ctx;
 }
 
-export function initTHREE(width: number, height: number) {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(95, width / height, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-  });
-
-  renderer.setClearColor(0xeeeeee);
-  renderer.setSize(width, height);
-
-  camera.position.set(150, 50, -150);
-  camera.position.set(0, 250, 0);
-  camera.lookAt(0, 0, 0);
-
-  addLightsTo(scene);
-
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.update();
-
-  document.body.appendChild(renderer.domElement);
-  return { scene, camera, renderer, controls };
-}
-
 export function middle([x1, y1]: number[], [x2, y2]: number[]): number[] {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
@@ -130,7 +107,7 @@ export function distort({
   jitter,
   segments,
   height,
-}: DistortOptions): number[][] {
+}: DistortOptions): Vector2D[] {
   const distorted: number[][] = [];
   const WIDTH = coords[1][0];
   distorted.push(coords[0]);
@@ -145,24 +122,15 @@ export function distort({
 }
 
 export function distort2(
-  points: number[][],
+  points: Vector2D[],
   jitter = 5,
   iteration = 0
-): number[][] {
-  let newPoints: number[][] = [];
+): Vector2D[] {
+  let newPoints: Vector2D[] = [];
   points.forEach((point, i) => {
     newPoints.push(point);
     const [x, y] = middle(points[i], points[i + 1] || points[0]);
     newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
   });
   return iteration > 5 ? points : distort2(newPoints, jitter, iteration + 1);
-}
-
-function addLightsTo(scene: THREE.Scene) {
-  const directional = new THREE.DirectionalLight(0xeeeeee, 2);
-  directional.name = 'light';
-  directional.castShadow = true;
-  directional.position.set(100, 50, 300);
-  directional.lookAt(0, 0, 0);
-  scene.add(directional);
 }
