@@ -6,18 +6,25 @@ import {
   randomFloat,
   randomInt,
   randomHue,
+  drawShape,
+  CanvasGlobalCompositionOperation,
 } from '../lib';
-import { drawPath } from './helpers';
 
-const [WIDTH, HEIGHT] = [2160, 3860];
-// const [WIDTH, HEIGHT] = [11811, 17717];
-const TOP = HEIGHT * 0.05;
-const BOTTOM = HEIGHT * 0.95;
+import { Stripe, Segment, createPath } from './helpers';
+
+const [WIDTH, HEIGHT] = [11811, 17717];
+// const [WIDTH, HEIGHT] = [2160, 3860];
+const Padding = {
+  X: WIDTH * 0.1,
+  Y: HEIGHT * 0.05,
+};
+const TOP = Padding.Y;
+const BOTTOM = HEIGHT - Padding.Y;
 const DISTORT_OPTION = 0.5;
 
 enum Colors {
   STRIPE = '#f2e8ae',
-  SKY = '#4fa8e8',
+  SKY = '#1a54e8',
   CLOUD = '#ffffff',
   SAND = '#ffc685',
   DARK_SAND = '#e6a050',
@@ -26,175 +33,88 @@ enum Colors {
 }
 
 const paint = (ctx: CanvasRenderingContext2D) => {
-  /**
-   * Setup
-   */
-  const stripeWidth = WIDTH / 120;
+  const stripeWidth = WIDTH / 80;
   const stripePadding = stripeWidth / 2;
   const stripesCount = stripeWidth + (stripePadding * 2) / WIDTH;
 
-  const stripes: Shape[] = [];
-  const skies: Shape[] = [];
-  const clouds: Shape[] = [];
-  const sands: Shape[] = [];
-  const ticks: Shape[] = [];
-  const ocean: Shape[] = [];
-  const blacks: Shape[] = [];
-  const darkSands: Shape[] = [];
-
-  for (let x = WIDTH * 0.1; x < WIDTH * 0.9; x += stripePadding + stripeWidth) {
-    const stripe: Shape = distort2(
-      [
-        [x, TOP],
-        [x + stripeWidth, TOP],
-        [x + stripeWidth, BOTTOM],
-        [x, BOTTOM],
-      ],
-      DISTORT_OPTION / 2
-    );
-
-    const skyHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.005);
-
-    const sky = distort2(
-      [
-        [x, TOP],
-        [x + stripeWidth, TOP],
-        [x + stripeWidth, TOP + skyHeight],
-        [x, TOP + skyHeight],
-      ],
-      DISTORT_OPTION / 2
-    );
-
-    const cloudHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.004);
-    const cloud: Shape = distort2(
-      [
-        [x, TOP + skyHeight - 2],
-        [x + stripeWidth, TOP + skyHeight - 2],
-        [x + stripeWidth, TOP + skyHeight + cloudHeight],
-        [x, TOP + skyHeight + cloudHeight],
-      ],
-      DISTORT_OPTION
-    );
-
-    const sandStart = HEIGHT * 0.7 + randomFloat(0, HEIGHT * 0.01);
-    const sand: Shape = distort2(
-      [
-        [x, sandStart],
-        [x + stripeWidth, sandStart],
-        [x + stripeWidth, BOTTOM],
-        [x, BOTTOM],
-      ],
-      DISTORT_OPTION
-    );
-
-    const darkSandHeight = randomFloat(HEIGHT * 0.01, HEIGHT * 0.03);
-    const darkSand: Shape = distort2(
-      [
-        [x, sandStart],
-        [x + stripeWidth, sandStart],
-        [x + stripeWidth, sandStart + darkSandHeight],
-        [x, sandStart + darkSandHeight],
-      ],
-      DISTORT_OPTION
-    );
-
-    const oceanStart =
-      HEIGHT * 0.6 + randomFloat(HEIGHT * 0.002, HEIGHT * 0.006);
-    const water = distort2(
-      [
-        [x, oceanStart],
-        [x + stripeWidth, oceanStart],
-        [x + stripeWidth, sandStart - 5],
-        [x, sandStart - 5],
-      ],
-      DISTORT_OPTION / 5
-    );
-
-    const darkWaterHeight = randomFloat(HEIGHT * 0.01, HEIGHT * 0.02);
-    const darkWater = distort2(
-      [
-        [x, oceanStart],
-        [x + stripeWidth, oceanStart],
-        [x + stripeWidth, oceanStart + darkWaterHeight],
-        [x, oceanStart + darkWaterHeight],
-      ],
-      DISTORT_OPTION
-    );
-
-    const foamHeight = cloudHeight;
-    const foam = distort2(
-      [
-        [x, oceanStart + darkWaterHeight],
-        [x + stripeWidth, oceanStart + darkWaterHeight],
-        [x + stripeWidth, oceanStart + darkWaterHeight + foamHeight],
-        [x, oceanStart + darkWaterHeight + foamHeight],
-      ],
-      DISTORT_OPTION
-    );
-
-    const blackHeight = randomFloat(HEIGHT * 0.001, HEIGHT * 0.004);
-    const black = distort2(
-      [
-        [x, BOTTOM - blackHeight],
-        [x + stripeWidth, BOTTOM - blackHeight],
-        [x + stripeWidth, BOTTOM],
-        [x, BOTTOM],
-      ],
-      DISTORT_OPTION
-    );
-
-    skies.push(sky);
-    skies.push(darkWater);
-    blacks.push(black);
-    stripes.push(stripe);
-    clouds.push(cloud);
-    clouds.push(foam);
-    sands.push(sand);
-    ocean.push(water);
-    darkSands.push(darkSand);
-  }
-
-  /**
-   * Composite the layers, start at base to not overpaint
-   */
-  stripes.forEach(stripe => drawPath(ctx, stripe, Colors.STRIPE));
-  sands.forEach(sand => drawPath(ctx, sand, Colors.SAND));
-  ocean.forEach(water => drawPath(ctx, water, Colors.WATER));
-  clouds.forEach(cloud => drawPath(ctx, cloud, Colors.CLOUD));
-  skies.forEach(sky => drawPath(ctx, sky, randomHue(190, 230, 100, 100, 65)));
-  blacks.forEach(black => drawPath(ctx, black, Colors.BLACK));
-  darkSands.forEach(sand => drawPath(ctx, sand, Colors.DARK_SAND));
-
-  for (let i = 0; i < sands.length; i++) {
-    const x = sands[i][0][0];
+  for (
+    let x = Padding.X;
+    x <= WIDTH - Padding.X;
+    x += stripeWidth + stripePadding
+  ) {
+    const base: Shape = createPath(x, TOP, stripeWidth, BOTTOM - TOP);
+    drawShape(ctx, base, { color: Colors.STRIPE, outline: false });
 
     /**
-     * TICKS to simluate clouds
+     * SKY
      */
+    const skyHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.01);
+    const sky: Shape = createPath(x, TOP, stripeWidth, skyHeight);
+    const skyWhite: Shape = createPath(
+      x,
+      TOP + skyHeight,
+      stripeWidth,
+      randomFloat(2, 8)
+    );
+    drawShape(ctx, sky, { color: randomHue(190, 240, 80, 70), outline: false });
+    drawShape(ctx, skyWhite, { color: '#ffffff', outline: false });
 
-    if (randomFloat() > 0.7) {
-      continue;
+    /**
+     * CLOUDS
+     */
+    if (randomFloat() > 0.75) {
+      for (let i = 0; i < randomInt(1, 20); i++) {
+        const height = randomFloat(1, 20);
+        const y = randomFloat(TOP + 50, BOTTOM * 0.5);
+        const cloud = createPath(x, y, stripeWidth, height, 2);
+        drawShape(ctx, cloud, { color: randomHue(0, 0, 0.6, 100, 100) });
+      }
     }
 
-    for (let p = 0; p < randomInt(2, 6); p++) {
-      const y = randomFloat(TOP, HEIGHT * 0.3);
-      const height = randomFloat(HEIGHT * 0.002, HEIGHT * 0.007);
+    /**
+     * WATER
+     */
+    const oceanStart = BOTTOM * 0.6 + Math.sin(x) * 100;
+    const oceanHeight = randomFloat(HEIGHT * 0.06, HEIGHT * 0.09);
+    const ocean: Shape = createPath(x, oceanStart, stripeWidth, oceanHeight);
+    const peakWaveHeight = randomFloat(20, 90);
+    const foamStart = oceanStart + peakWaveHeight;
+    const foam = createPath(x, foamStart, stripeWidth, randomFloat(10, 20));
+    const peakWave: Shape = createPath(
+      x,
+      oceanStart,
+      stripeWidth,
+      peakWaveHeight
+    );
+    drawShape(ctx, ocean, { color: Colors.WATER });
+    drawShape(ctx, peakWave, { color: randomHue(190, 240, 0.5, 70, 70) });
+    drawShape(ctx, foam, { color: randomHue(0, 10, 0.5, 100, 100) });
 
-      const tick: Shape = distort2(
-        [
-          [x, y],
-          [x + stripeWidth, y],
-          [x + stripeWidth, y + height],
-          [x, y + height],
-        ],
-        1
-      );
-      ticks.push(tick);
-    }
+    /**
+     * BEACH
+     */
+    const sandStart = oceanStart + oceanHeight;
+    const sandHeight = HEIGHT * 0.04 * randomFloat(1, 1.05);
+    const sand: Shape = createPath(x, sandStart, stripeWidth, sandHeight);
+    const darkSandEnd = HEIGHT * 0.7 * randomFloat(1, 1.05);
+    const darkSandHeight = darkSandEnd - sandStart;
+    const darkSand: Shape = createPath(
+      x,
+      sandStart,
+      stripeWidth,
+      darkSandHeight
+    );
+    drawShape(ctx, sand, { color: Colors.SAND });
+    drawShape(ctx, darkSand, { color: randomHue(0, 80, 0.5, 70, 70) });
+
+    /**
+     * BLACK
+     */
+    const blackHeight = randomFloat(HEIGHT * 0.002, HEIGHT * 0.01);
+    const blackStart = BOTTOM - blackHeight;
+    const black: Shape = createPath(x, blackStart, stripeWidth, blackHeight);
+    drawShape(ctx, black, { color: Colors.BLACK });
   }
-
-  ctx.globalCompositeOperation = 'overlay';
-  ticks.forEach(tick => drawPath(ctx, tick, 'rgba(255,255,255,0.5)'));
 };
 
 setTimeout(() => {

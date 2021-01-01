@@ -34,6 +34,34 @@ export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 export const average = (a: number, b: number) => (a + b) / 2;
 
+export enum CanvasGlobalCompositionOperation {
+  SOURCE_IN = 'source-in',
+  SOURCE_OUT = 'source-out',
+  SOURCE_ATOP = 'source-atop',
+  DESTINATION_OVER = 'destination-over',
+  DESTINATION_IN = 'destination-in',
+  DESTINATION_OUT = 'destination-out',
+  DESTINATION_ATOP = 'destination-atop',
+  LIGHTER = 'lighter',
+  COPY = 'COPY',
+  XOR = 'xor',
+  MULTIPLY = 'multiply',
+  SCREEN = 'screen',
+  OVERLAY = 'overlay',
+  DARKEN = 'darken',
+  LIGHTEN = 'lighten',
+  COLOR_DODGE = 'color-dodge',
+  COLOR_BURN = 'color-burn',
+  HARD_LIGHT = 'hard-light',
+  SOFT_LIGHT = 'soft-light',
+  DIFFERENCE = 'difference',
+  EXCLUSION = 'exclusion',
+  HUE = 'hue',
+  SATURATION = 'saturation',
+  COLOR = 'color',
+  LUMINOSITY = 'luminosity',
+}
+
 export function paintGrid(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -98,7 +126,7 @@ export function pointAlong([x1, y1]: Vector2D, [x2, y2]: Vector2D): Vector2D {
 export function drawShape(
   ctx: CanvasRenderingContext2D,
   shape: Vector2D[],
-  { color, outline }: { color: string; outline: false }
+  { color, outline }: { color: string; outline?: boolean }
 ) {
   ctx.beginPath();
   ctx.moveTo(...shape[0]);

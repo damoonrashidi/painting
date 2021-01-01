@@ -14,15 +14,10 @@ function paint(
   camera: THREE.PerspectiveCamera,
   renderer: THREE.WebGLRenderer
 ) {
-  const light = new THREE.DirectionalLight(0xff0000, 1);
-  light.position.set(-IMAGE_SIZE / 2, 200, -IMAGE_SIZE / 2);
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(-IMAGE_SIZE / 3, 100, -IMAGE_SIZE / 3);
   light.lookAt(IMAGE_SIZE, 10, IMAGE_SIZE);
   scene.add(light);
-
-  const light2 = new THREE.DirectionalLight(0xffffff, 1);
-  light2.position.set(IMAGE_SIZE / 3, 400, IMAGE_SIZE / 3);
-  light2.lookAt(IMAGE_SIZE, 10, IMAGE_SIZE);
-  scene.add(light2);
 
   const planeBuffer = new THREE.PlaneBufferGeometry(
     IMAGE_SIZE,
@@ -54,7 +49,7 @@ function paint(
         IMAGE_SIZE / SAMPLE_SIZE
       ) / 2;
 
-    positions.setZ(i, height / 2);
+    positions.setZ(i, height);
   }
 
   const plane = new THREE.Mesh(planeBuffer, planeMaterial);

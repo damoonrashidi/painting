@@ -1,17 +1,28 @@
-import { Vector2D } from '../lib';
+import { Vector2D, distort2, Shape } from '../lib';
 
-export function drawPath(
-  ctx: CanvasRenderingContext2D,
-  path: Vector2D[],
-  color: string
-): void {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(...path[0]);
-  path.forEach(point => {
-    ctx.lineTo(...point);
-  });
-  ctx.lineTo(...path[0]);
-  ctx.closePath();
-  ctx.fill();
+export interface Segment {
+  shape: Shape;
+  color: string;
+}
+
+export interface Stripe {
+  segments: Segment[];
+}
+
+export function createPath(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  distort: number = 1
+): Shape {
+  return distort2(
+    [
+      [x, y],
+      [x + width, y],
+      [x + width, y + height],
+      [x, y + height],
+    ],
+    distort
+  );
 }
