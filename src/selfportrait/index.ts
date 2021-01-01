@@ -53,11 +53,11 @@ const paint = (
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
+  ctx.fillStyle = '#fff';
   const ref = init(WIDTH, HEIGHT, false, 'reference-canvas');
   (document.getElementById(
     'reference-canvas'
   ) as HTMLCanvasElement).style.display = 'none';
-  ctx.fillStyle = '#fff';
   const referenceImage = new Image();
   referenceImage.onload = () => {
     ref.drawImage(referenceImage, 0, 0, WIDTH, HEIGHT);

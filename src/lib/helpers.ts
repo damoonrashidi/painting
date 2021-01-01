@@ -9,9 +9,7 @@ export function randomInt(min: number = 0, max: number = 100) {
 }
 
 export function randomFloat(min: number = 0, max: number = 1) {
-  const r = Math.random() + Math.random() / 2;
-
-  return r * (max - min) + min;
+  return Math.random() * (max - min) + min;
 }
 
 export type Vector2D = [number, number];
@@ -33,9 +31,7 @@ export interface Line {
 }
 
 export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
-
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
-
 export const average = (a: number, b: number) => (a + b) / 2;
 
 export function paintGrid(
@@ -95,11 +91,26 @@ export function middle([x1, y1]: number[], [x2, y2]: number[]): number[] {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
 }
 
-export function pointAlong(
-  [x1, y1]: [number, number],
-  [x2, y2]: [number, number]
-): [number, number] {
+export function pointAlong([x1, y1]: Vector2D, [x2, y2]: Vector2D): Vector2D {
   return [(x1 + x2) / 2, (y1 + y2) / 2];
+}
+
+export function drawShape(
+  ctx: CanvasRenderingContext2D,
+  shape: Vector2D[],
+  { color, outline }: { color: string; outline: false }
+) {
+  ctx.beginPath();
+  ctx.moveTo(...shape[0]);
+  shape.forEach(point => ctx.lineTo(...point));
+  ctx.closePath();
+  if (outline) {
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
 }
 
 export function distort({
@@ -108,9 +119,8 @@ export function distort({
   segments,
   height,
 }: DistortOptions): Vector2D[] {
-  const distorted: number[][] = [];
+  const distorted: Vector2D[] = [];
   const WIDTH = coords[1][0];
-  distorted.push(coords[0]);
   for (let i = 1; i <= segments; i++) {
     const x = (i * WIDTH) / segments;
     const y = distorted[i - 1][1] + random(-jitter, jitter) * Math.sin(i);

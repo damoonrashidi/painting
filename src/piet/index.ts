@@ -3,14 +3,16 @@ import { Square, drawSquare, fillSquare, splitSquares, Split } from './helpers';
 
 // const [WIDTH, HEIGHT] = [11811, 17717];
 const [WIDTH, HEIGHT] = [2160, 3890];
+const PADDING_X = WIDTH / 10;
+const PADDING_Y = HEIGHT / 10;
 
 function paint(ctx: CanvasRenderingContext2D): void {
   let squares: Square[] = [
     {
-      x: 150,
-      y: 150,
-      width: WIDTH - 300,
-      height: HEIGHT - 300,
+      x: PADDING_X,
+      y: PADDING_Y,
+      width: WIDTH - PADDING_X * 2,
+      height: HEIGHT - PADDING_Y * 2,
     },
   ];
 
@@ -25,28 +27,18 @@ function paint(ctx: CanvasRenderingContext2D): void {
    */
 
   const points: Vector2D[] = [];
-  let [x, y] = [WIDTH / 2, HEIGHT / 2];
 
-  for (let i = 0; i < 500; i++) {
-    x -= randomInt(100, 200);
-    y -= randomInt(150, 250);
+  for (let i = 0; i < 200; i++) {
+    const point = [
+      randomFloat(150, WIDTH - PADDING_X / 2),
+      randomFloat(150, HEIGHT - PADDING_Y / 2),
+    ];
 
-    if (x <= 0) {
-      x = WIDTH;
-    }
-    if (y <= 0) {
-      y = HEIGHT;
-    }
-
-    points.push([x, y]);
+    squares = splitSquares(squares, point);
   }
 
-  points.forEach(point => {
-    squares = splitSquares(squares, point);
-  });
-
   squares.forEach(square => drawSquare(ctx, square));
-  const randomSquares = squares.filter(() => randomFloat() > 0.9);
+  const randomSquares = squares.filter(() => randomFloat(0, 1) > 0.95);
   randomSquares.forEach(square => fillSquare(ctx, square));
 }
 

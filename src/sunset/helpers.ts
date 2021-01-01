@@ -1,0 +1,1 @@
+import { drawShape } from '../lib';
