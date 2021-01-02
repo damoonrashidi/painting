@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/13.6.0/bin/node /Users/damoonrashidi/.yarn/bin/yarn.js add three-orbit-controls-ts
+  /usr/local/Cellar/node/13.6.0/bin/node /Users/damoonrashidi/.yarn/bin/yarn.js add --dev @types/perlin-simplex
 
 PATH: 
   /Users/damoonrashidi/.yarn/bin:/Users/damoonrashidi/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/opt/arcanist/bin:/Users/damoonrashidi/tools:/Users/damoonrashidi/tools/flutter/bin:/Users/damoonrashidi/.composer/vendor/bin:/usr/local/sbin:./node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:~/.rvm/gems/ruby-2.2.1/bin:~/.rvm/gems/ruby-2.2.1@global/bin:~/.rvm/rubies/ruby-2.2.1/bin:~/.rvm/bin:~/tools/arcanist/bin:~/.rvm/bin:/usr/local/opt/fzf/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/three-orbit-controls-ts: Not found
+  Error: https://registry.yarnpkg.com/@types%2fperlin-simplex: Not found
       at Request.params.callback [as _callback] (/Users/damoonrashidi/.yarn/lib/cli.js:66988:18)
       at Request.self.callback (/Users/damoonrashidi/.yarn/lib/cli.js:140749:22)
       at Request.emit (node:events:327:20)
@@ -33,7 +33,8 @@ npm manifest:
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-      "start": "node fuse"
+      "start": "node fuse",
+      "new": "sh generate.sh"
     },
     "devDependencies": {
       "@types/node": "^12.6.2",
@@ -42,7 +43,9 @@ npm manifest:
       "typescript": "^3.1.6"
     },
     "dependencies": {
-      "three": "^0.124.0"
+      "perlin-simplex": "^0.0.3",
+      "three": "^0.124.0",
+      "three-orbitcontrols-ts": "^0.1.2"
     }
   }
 
@@ -1667,6 +1670,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
     integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
   
+  perlin-simplex@^0.0.3:
+    version "0.0.3"
+    resolved "https://registry.yarnpkg.com/perlin-simplex/-/perlin-simplex-0.0.3.tgz#4c2a6aa52ab93b980daa9e2a95bd4dadf7e9f81c"
+    integrity sha512-fhLYrvCVxYlvStYUCZ2z0pWkrJX+PcfRvtTRbvegN3GxIEiOPmBbFFr0Uk2MJxqmjVrgnHuFQBcmyDQJ/kMp/w==
+  
   posix-character-classes@^0.1.0:
     version "0.1.1"
     resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
@@ -2139,10 +2147,22 @@ Lockfile:
     dependencies:
       has-flag "^3.0.0"
   
+  three-orbitcontrols-ts@^0.1.2:
+    version "0.1.2"
+    resolved "https://registry.yarnpkg.com/three-orbitcontrols-ts/-/three-orbitcontrols-ts-0.1.2.tgz#2040955904022ae19c2e9c52ffdff43168658abd"
+    integrity sha1-IECVWQQCKuGcLpxS/9/0MWhlir0=
+    dependencies:
+      three "^0.83.0"
+  
   three@^0.124.0:
     version "0.124.0"
     resolved "https://registry.yarnpkg.com/three/-/three-0.124.0.tgz#14ab1a26ba6c56e51190e1b55695cd3c1e69ea55"
     integrity sha512-ROXp1Ly7YyF+jC910DQyAWj++Qlw2lQv0qwYLNQwdDbjk4bsOXAfGO92wYTMPNei1GMJUmCxSxc3MjGBTS09Rg==
+  
+  three@^0.83.0:
+    version "0.83.0"
+    resolved "https://registry.yarnpkg.com/three/-/three-0.83.0.tgz#3b7f94790af3e021dac1f44a2617569ca2032b0b"
+    integrity sha1-O3+UeQrz4CHawfRKJhdWnKIDKws=
   
   through@^2.3.6:
     version "2.3.8"
