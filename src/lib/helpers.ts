@@ -131,7 +131,7 @@ export function drawShape(
   ctx.beginPath();
   ctx.moveTo(...shape[0]);
   shape.forEach(point => ctx.lineTo(...point));
-  ctx.closePath();
+  // ctx.closePath();
   if (outline) {
     ctx.strokeStyle = color;
     ctx.stroke();

@@ -41,6 +41,35 @@ export const triangleFull: GraphemeFunction = (
   };
 };
 
+export const fan: GraphemeFunction = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): Grapheme => {
+  const startX = randomFloat(x, x + width * 0.7);
+  const startY = randomFloat(y, y + height * 0.5);
+  const fanWidth = randomFloat(0, width * 0.7);
+  const gap = randomFloat(height * 0.05 * height * 0.1);
+  const path: Shape = [
+    [startX, startY],
+    [startX + fanWidth, startY],
+    [startX, startY + gap],
+    [startX, startY + gap * 2],
+    [startX + fanWidth, startY + gap * 2],
+    [startX, startY + gap * 3],
+    [startX + fanWidth, startY + gap * 3],
+    [startX, startY + gap * 4],
+    [startX + fanWidth, startY + gap * 5],
+  ];
+
+  return {
+    fill: GraphemeFill.STROKE,
+    type: GraphemeType.FAN,
+    path,
+  };
+};
+
 export const circle: GraphemeFunction = (
   x: number,
   y: number,
@@ -52,7 +81,7 @@ export const circle: GraphemeFunction = (
     randomFloat(y + height * 0.2, y + height * 0.8),
   ];
 
-  const r = randomFloat(width * 0.1, width * 0.3);
+  const r = randomFloat(width * 0.05, width * 0.2);
 
   return {
     fill: GraphemeFill.STROKE,

@@ -1,4 +1,5 @@
 import {
+  CanvasGlobalCompositionOperation,
   Shape,
   Vector2D,
   randomFloat,
@@ -15,13 +16,10 @@ export enum GraphemeFill {
 
 export enum GraphemeType {
   BAR,
-  BAR_FAT,
   CIRCLE,
-  CIRCLE_FULL,
   EMPTY,
   FAN,
   SQUARE,
-  SQUARE_FAT,
   SQUARE_FULL,
   LINK,
   TRIANGLE,
@@ -38,12 +36,9 @@ export type GraphemeFunction = (
 function randomGraphemeType() {
   const phemes = [
     GraphemeType.BAR,
-    GraphemeType.BAR_FAT,
     GraphemeType.CIRCLE,
-    GraphemeType.CIRCLE_FULL,
     GraphemeType.FAN,
     GraphemeType.SQUARE,
-    GraphemeType.SQUARE_FAT,
     GraphemeType.SQUARE_FULL,
     GraphemeType.TRIANGLE,
     GraphemeType.TRIANGLE_FULL,
@@ -69,7 +64,7 @@ export function generateGlyph(
   width: number,
   height: number
 ): Glyph {
-  const count = randomInt(2, 4);
+  const count = randomInt(1, 6);
   const glyph: Glyph = [];
   for (let i = 0; i < count; i++) {
     const grapheme = generateGrapheme(x, y, width, height);
@@ -83,13 +78,14 @@ export function renderGlyph(ctx: CanvasRenderingContext2D, glyph: Glyph): void {
   ctx.lineWidth = 4;
   glyph.forEach(grapheme => {
     ctx.save();
+    // ctx.globalCompositeOperation = CanvasGlobalCompositionOperation.XOR;
     ctx.translate(...grapheme.path[0]);
-    ctx.rotate((randomInt(-20, 20) * Math.PI) / 180);
+    ctx.rotate((randomInt(-180, 180) * Math.PI) / 180);
     ctx.translate(-grapheme.path[0][0], -grapheme.path[0][1]);
     ctx.lineWidth = randomFloat(2, 6);
 
     if (grapheme.type === GraphemeType.CIRCLE) {
-      ctx.lineWidth = randomFloat(1, 20);
+      ctx.lineWidth = randomFloat(1, 5);
       ctx.beginPath();
       ctx.arc(
         grapheme.path[0][0],
@@ -101,8 +97,12 @@ export function renderGlyph(ctx: CanvasRenderingContext2D, glyph: Glyph): void {
       ctx.closePath();
       ctx.stroke();
     } else {
+      if (grapheme.type === GraphemeType.FAN) {
+        ctx.lineWidth = 1;
+      }
+
       drawShape(ctx, grapheme.path, {
-        color: '#222',
+        color: '#000',
         outline: grapheme.fill === GraphemeFill.STROKE,
       });
     }
@@ -130,6 +130,7 @@ export function generateGrapheme(
     [GraphemeType.TRIANGLE, Graphemes.triangle],
     [GraphemeType.TRIANGLE_FULL, Graphemes.triangleFull],
     [GraphemeType.CIRCLE, Graphemes.circle],
+    [GraphemeType.FAN, Graphemes.fan],
   ]);
 
   const generator = graphemeMap.get(type);
