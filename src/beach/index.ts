@@ -12,8 +12,8 @@ import {
 
 import { Stripe, Segment, createPath } from './helpers';
 
-const [WIDTH, HEIGHT] = [11811, 17717];
-// const [WIDTH, HEIGHT] = [2160, 3860];
+// const [WIDTH, HEIGHT] = [11811, 17717];
+const [WIDTH, HEIGHT] = [2160, 3860];
 const Padding = {
   X: WIDTH * 0.1,
   Y: HEIGHT * 0.05,

@@ -76,6 +76,10 @@ export function generateGlyph(
 
 export function renderGlyph(ctx: CanvasRenderingContext2D, glyph: Glyph): void {
   ctx.lineWidth = 4;
+  const color = randomFloat() > 0.7 ? '#eee' : '#000';
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+
   glyph.forEach(grapheme => {
     ctx.save();
     // ctx.globalCompositeOperation = CanvasGlobalCompositionOperation.XOR;
@@ -100,9 +104,8 @@ export function renderGlyph(ctx: CanvasRenderingContext2D, glyph: Glyph): void {
       if (grapheme.type === GraphemeType.FAN) {
         ctx.lineWidth = 1;
       }
-
       drawShape(ctx, grapheme.path, {
-        color: '#000',
+        color,
         outline: grapheme.fill === GraphemeFill.STROKE,
       });
     }

@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node fuse"
+    "start": "node fuse",
+    "new": "sh generate.sh"
   },
   "devDependencies": {
     "@types/node": "^12.6.2",
