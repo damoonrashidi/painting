@@ -41,6 +41,29 @@ export const triangleFull: GraphemeFunction = (
   };
 };
 
+export const circle: GraphemeFunction = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): Grapheme => {
+  const [oX, oY] = [
+    randomFloat(x + width * 0.2, x + width * 0.8),
+    randomFloat(y + height * 0.2, y + height * 0.8),
+  ];
+
+  const r = randomFloat(width * 0.1, width * 0.3);
+
+  return {
+    fill: GraphemeFill.STROKE,
+    type: GraphemeType.CIRCLE,
+    path: [
+      [oX, oY],
+      [r, r],
+    ],
+  };
+};
+
 export const square: GraphemeFunction = (
   x: number,
   y: number,
@@ -53,7 +76,7 @@ export const square: GraphemeFunction = (
     size: 0,
   };
 
-  box.size = randomFloat(width * 0.1, width * 0.3);
+  box.size = randomFloat(width * 0.1, width * 0.2);
   box.x = randomFloat(x, x + width - box.size);
   box.y = randomFloat(y, y + height - box.size);
 

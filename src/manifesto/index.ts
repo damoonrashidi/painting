@@ -1,31 +1,31 @@
-import { init, randomFloat, randomHue, paintGrid, drawShape } from '../lib';
+import { init, drawShape } from '../lib';
 import { generateGlyph, renderGlyph } from './helpers';
 
-const [WIDTH, HEIGHT] = [2160, 3890];
-//const [WIDTH, HEIGHT] = [11811, 17717];
+// const [WIDTH, HEIGHT] = [2160, 3890];
+const [WIDTH, HEIGHT] = [11811, 17717];
 const Padding = {
   X: WIDTH / 10,
   Y: HEIGHT / 12,
 };
-const CELL_SIZE = WIDTH / 10;
-const CELL_PADDING = CELL_SIZE / 7;
+const CELL_SIZE = WIDTH / 64;
+const CELL_PADDING = CELL_SIZE / 2;
 
 const manifesto = `i was born at a very young age i dont know when i started building but i do know that it sustains me`;
 
 function paint(ctx: CanvasRenderingContext2D) {
-  // paintGrid(ctx, WIDTH, HEIGHT, { showNumbers: false });
+  ctx.fillStyle = 'rgba(0,0,0,0.02)';
 
   for (
     let y = Padding.Y;
-    y < HEIGHT - Padding.Y * 2 + CELL_SIZE;
+    y < HEIGHT - Padding.Y - CELL_SIZE;
     y += CELL_SIZE + CELL_PADDING
   ) {
     for (
       let x = Padding.X;
-      x < WIDTH - Padding.X * 2;
+      x < WIDTH - Padding.X - CELL_SIZE;
       x += CELL_SIZE + CELL_PADDING
     ) {
-      // ctx.lineWidth = 1;
+      ctx.lineWidth = 1;
       // drawShape(
       //   ctx,
       //   [

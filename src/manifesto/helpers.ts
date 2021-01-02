@@ -1,4 +1,11 @@
-import { Shape, Vector2D, randomFloat, randomInt, drawShape } from '../lib';
+import {
+  Shape,
+  Vector2D,
+  randomFloat,
+  randomHue,
+  randomInt,
+  drawShape,
+} from '../lib';
 import * as Graphemes from './graphemes';
 
 export enum GraphemeFill {
@@ -10,7 +17,6 @@ export enum GraphemeType {
   BAR,
   BAR_FAT,
   CIRCLE,
-  CIRCLE_FAT,
   CIRCLE_FULL,
   EMPTY,
   FAN,
@@ -34,7 +40,6 @@ function randomGraphemeType() {
     GraphemeType.BAR,
     GraphemeType.BAR_FAT,
     GraphemeType.CIRCLE,
-    GraphemeType.CIRCLE_FAT,
     GraphemeType.CIRCLE_FULL,
     GraphemeType.FAN,
     GraphemeType.SQUARE,
@@ -64,7 +69,7 @@ export function generateGlyph(
   width: number,
   height: number
 ): Glyph {
-  const count = randomInt(1, 3);
+  const count = randomInt(2, 4);
   const glyph: Glyph = [];
   for (let i = 0; i < count; i++) {
     const grapheme = generateGrapheme(x, y, width, height);
@@ -82,10 +87,26 @@ export function renderGlyph(ctx: CanvasRenderingContext2D, glyph: Glyph): void {
     ctx.rotate((randomInt(-20, 20) * Math.PI) / 180);
     ctx.translate(-grapheme.path[0][0], -grapheme.path[0][1]);
     ctx.lineWidth = randomFloat(2, 6);
-    drawShape(ctx, grapheme.path, {
-      color: '#222',
-      outline: grapheme.fill === GraphemeFill.STROKE,
-    });
+
+    if (grapheme.type === GraphemeType.CIRCLE) {
+      ctx.lineWidth = randomFloat(1, 20);
+      ctx.beginPath();
+      ctx.arc(
+        grapheme.path[0][0],
+        grapheme.path[0][1],
+        grapheme.path[1][0],
+        0,
+        Math.PI * 2
+      );
+      ctx.closePath();
+      ctx.stroke();
+    } else {
+      drawShape(ctx, grapheme.path, {
+        color: '#222',
+        outline: grapheme.fill === GraphemeFill.STROKE,
+      });
+    }
+
     ctx.restore();
   });
 }
@@ -108,6 +129,7 @@ export function generateGrapheme(
     [GraphemeType.BAR, Graphemes.bar],
     [GraphemeType.TRIANGLE, Graphemes.triangle],
     [GraphemeType.TRIANGLE_FULL, Graphemes.triangleFull],
+    [GraphemeType.CIRCLE, Graphemes.circle],
   ]);
 
   const generator = graphemeMap.get(type);
