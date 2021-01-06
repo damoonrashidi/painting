@@ -28,6 +28,8 @@ export function splitSquares(squares: Square[], [x, y]: Vector2D) {
   return copy;
 }
 
+const LINE_WIDTH = 50;
+
 export function drawSquare(
   ctx: CanvasRenderingContext2D,
   { x, y, width, height }: Square
@@ -35,7 +37,7 @@ export function drawSquare(
   ctx.beginPath();
   ctx.rect(x, y, width, height);
   ctx.strokeStyle = '#000';
-  ctx.lineWidth = 5;
+  ctx.lineWidth = LINE_WIDTH;
   ctx.stroke();
 }
 
@@ -57,10 +59,10 @@ export function fillSquare(
   ctx.beginPath();
   ctx.fillStyle = color;
   ctx.fillRect(
-    square.x + 2.5,
-    square.y + 2.5,
-    square.width - 5,
-    square.height - 5
+    square.x + LINE_WIDTH / 2,
+    square.y + LINE_WIDTH / 2,
+    square.width - LINE_WIDTH,
+    square.height - LINE_WIDTH
   );
   ctx.closePath();
 }

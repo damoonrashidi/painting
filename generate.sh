@@ -17,6 +17,7 @@ function paint(ctx: CanvasRenderingContext2D) {
 }
 
 setTimeout(() => {
+  console.clear();
   const ctx = init(WIDTH, HEIGHT);
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);

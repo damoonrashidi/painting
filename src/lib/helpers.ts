@@ -5,7 +5,7 @@ export function random(min: number = 0, max: number = 100, rounded = true) {
 }
 
 export function randomInt(min: number = 0, max: number = 100) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return Math.round(Math.random() * (max - min) + min);
 }
 
 export function randomFloat(min: number = 0, max: number = 1) {
