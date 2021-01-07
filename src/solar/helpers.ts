@@ -27,14 +27,15 @@ export function generateQuadraticLineGradient(
   let i = 0;
   gradient.addColorStop(0, '#f00');
   while (i <= 1) {
+    const height = randomFloat(0.1, 0.3);
     const yellow = randomHue(50, 70, 1, 80, 70);
     const red = randomHue(320, 360, 1, 80, 70);
     const isWhite = randomFloat() > 0.8;
     const white = '#fff';
     const color = isWhite ? white : randomFloat() > 0.8 ? yellow : red;
     gradient.addColorStop(i, color);
-    console.log(i, color);
-    i += randomFloat(0.05, 0.1);
+    gradient.addColorStop(Math.min(1, i + height), color);
+    i += height;
   }
 
   return gradient;

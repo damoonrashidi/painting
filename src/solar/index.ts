@@ -40,13 +40,14 @@ function paint(ctx: CanvasRenderingContext2D) {
     ctx.strokeStyle = generateQuadraticLineGradient(ctx, HEIGHT);
     ctx.beginPath();
     ctx.moveTo(WIDTH * i, 0);
-    ctx.lineWidth = 4;
+    ctx.lineWidth = randomFloat(5, 8);
     ctx.quadraticCurveTo(
       WIDTH * 0.785 + i * 180,
       HEIGHT * 0.54,
       WIDTH * (i - 0.05),
       HEIGHT
     );
+    i += WIDTH * 0.0000001;
     ctx.stroke();
   }
 
