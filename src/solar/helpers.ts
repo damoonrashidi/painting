@@ -6,8 +6,8 @@ export function paintArea(
   color: string
 ) {
   ctx.save();
-  ctx.globalCompositeOperation = CanvasGlobalCompositionOperation.COLOR_BURN;
-  ctx.filter = 'blur(200px)';
+  ctx.globalCompositeOperation = CanvasGlobalCompositionOperation.COLOR;
+  ctx.filter = 'blur(140px)';
   drawShape(ctx, shape, { color, outline: false });
   ctx.fill();
   ctx.restore();

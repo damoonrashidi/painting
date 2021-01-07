@@ -18,10 +18,10 @@ function paint(ctx: CanvasRenderingContext2D) {
   ctx.scale(1.15, 1);
   for (let r = 10; r < WIDTH * 0.7; r += 1) {
     let a = randomFloat(0, 2);
-    let w = randomFloat(1, 4);
+    let w = randomFloat(1, 6);
     while (a < 2) {
-      const yellow = randomHue(50, 70, 1, 100, 70);
-      const red = randomHue(320, 360, 1, 100, 70);
+      const yellow = randomHue(50, 70, 1, 80, 70);
+      const red = randomHue(320, 360, 1, 80, 70);
 
       const color = randomFloat() > 0.8 ? yellow : red;
       ctx.strokeStyle = color;
@@ -41,14 +41,14 @@ function paint(ctx: CanvasRenderingContext2D) {
   ctx.scale(1.15, 1);
   for (let r = 10; r < WIDTH * 0.7; r += 1) {
     let a = randomFloat(0, 2);
-    let w = randomFloat(1, 4);
+    let lineWidth = randomFloat(1, 2);
     while (a < 2) {
       const yellow = randomHue(50, 70, 1, 100, 70);
       const red = randomHue(320, 360, 1, 100, 70);
 
       const color = randomFloat() > 0.8 ? yellow : red;
       ctx.strokeStyle = color;
-      ctx.lineWidth = w;
+      ctx.lineWidth = lineWidth;
       const c = randomFloat(0.1, 0.2);
       ctx.beginPath();
       ctx.arc(x, y, r, a * Math.PI * 2, (a + c) * Math.PI * 2);
@@ -59,13 +59,13 @@ function paint(ctx: CanvasRenderingContext2D) {
   }
   ctx.restore();
 
-  for (let i = 0.712; i < 1.02; i += 0.001) {
-    ctx.strokeStyle = '#000';
+  for (let i = 0.712; i < 1.02; i += 0.005) {
+    ctx.strokeStyle = '#f00';
     ctx.beginPath();
     ctx.moveTo(WIDTH * i, 0);
     ctx.lineWidth = 4;
     ctx.quadraticCurveTo(
-      WIDTH * 0.81 + i * 100,
+      WIDTH * 0.785 + i * 180,
       HEIGHT * 0.54,
       WIDTH * (i - 0.05),
       HEIGHT
@@ -75,12 +75,20 @@ function paint(ctx: CanvasRenderingContext2D) {
 
   const shape: Shape = [
     [WIDTH * 0.2, HEIGHT * 0.45],
-    [WIDTH * 0.25, HEIGHT * 0.5],
-    [WIDTH * 0.3, HEIGHT * 0.55],
-    [WIDTH * 0.25, HEIGHT * 0.55],
+    [WIDTH * 0.3, HEIGHT * 0.45],
+    [WIDTH * 0.3, HEIGHT * 0.65],
+    [WIDTH * 0.2, HEIGHT * 0.65],
   ];
 
-  paintArea(ctx, shape, '#00f');
+  paintArea(ctx, shape, '#0000ff');
+
+  const shape2: Shape = [
+    [WIDTH * 0.75, 0],
+    [WIDTH * 0.8, 0],
+    [WIDTH * 0.8, HEIGHT],
+    [WIDTH * 0.75, HEIGHT],
+  ];
+  paintArea(ctx, shape2, '#0000ff');
 }
 
 setTimeout(() => {
