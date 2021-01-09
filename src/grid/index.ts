@@ -1,4 +1,12 @@
-import { init, random, paintGrid, Vector2D, randomHue } from '../lib';
+import {
+  init,
+  random,
+  paintGrid,
+  Vector2D,
+  randomHue,
+  randomInt,
+} from '../lib';
+
 const [WIDTH, HEIGHT] = [11811, 17717];
 // const [WIDTH, HEIGHT] = [2160, 3890];
 const PADDING = WIDTH / 6;
@@ -33,7 +41,7 @@ function generateColumns(width: number, height: number): Column[] {
     let y = PADDING;
     const columnWidth = random(10, 500, true);
     const segments: Segment[] = [];
-    const columnHeight = HEIGHT - PADDING - random(500, 1500);
+    const columnHeight = HEIGHT - PADDING;
 
     while (y < columnHeight) {
       let segmentHeight = random(30, 250);
@@ -69,7 +77,7 @@ function generateColumns(width: number, height: number): Column[] {
 function drawSegment(ctx: CanvasRenderingContext2D, segment: Segment): void {
   const { x, y, width, height, dotCount } = segment;
 
-  ctx.fillStyle = '#222';
+  ctx.fillStyle = randomHue(0, 0, 100, 0, randomInt(85, 95));
   for (let i = 0; i < dotCount; i++) {
     const dotX = random(x, x + width, false);
     const dotY = random(y, y + height, false);
@@ -88,13 +96,13 @@ const paint = (ctx: CanvasRenderingContext2D) => {
     segments.forEach(segment => drawSegment(ctx, segment));
   });
 
-  ctx.fillStyle = '#fffbf0';
+  ctx.fillStyle = '#111';
   ctx.fillRect(WIDTH - PADDING, 0, PADDING, HEIGHT);
 };
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fffbf0';
+  ctx.fillStyle = '#111';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 }, 0);

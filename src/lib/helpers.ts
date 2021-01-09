@@ -149,7 +149,7 @@ export function distort({
 }: DistortOptions): Vector2D[] {
   const distorted: Vector2D[] = [];
   const WIDTH = coords[1][0];
-  for (let i = 1; i <= segments; i++) {
+  for (let i = 1; i < segments; i++) {
     const x = (i * WIDTH) / segments;
     const y = distorted[i - 1][1] + random(-jitter, jitter) * Math.sin(i);
     distorted.push([x, y]);

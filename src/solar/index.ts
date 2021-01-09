@@ -2,14 +2,16 @@ import {
   CanvasGlobalCompositionOperation,
   Shape,
   Vector2D,
+  distort2,
   init,
   randomFloat,
   randomHue,
+  drawShape,
 } from '../lib';
-import { generateQuadraticLineGradient, paintArea } from './helpers';
+import { generateQuadraticLineGradient, hill } from './helpers';
 
 // const [WIDTH, HEIGHT] = [10000, 10000];
-const [WIDTH, HEIGHT] = [6000, 3000];
+const [WIDTH, HEIGHT] = [12000, 6000];
 
 function paint(ctx: CanvasRenderingContext2D) {
   let [x, y]: Vector2D = [WIDTH * 0.3, HEIGHT * 0.4];
@@ -36,11 +38,11 @@ function paint(ctx: CanvasRenderingContext2D) {
   }
   ctx.restore();
 
-  for (let i = 0.712; i < 1.02; i += 0.0005) {
+  for (let i = 0.712; i < 1.02; i += 0.0000005) {
     ctx.strokeStyle = generateQuadraticLineGradient(ctx, HEIGHT);
     ctx.beginPath();
     ctx.moveTo(WIDTH * i, 0);
-    ctx.lineWidth = randomFloat(5, 8);
+    ctx.lineWidth = randomFloat(10, 16);
     ctx.quadraticCurveTo(
       WIDTH * 0.785 + i * 180,
       HEIGHT * 0.54,
@@ -54,9 +56,9 @@ function paint(ctx: CanvasRenderingContext2D) {
   [x, y] = [WIDTH * 1.15, HEIGHT * 0.6];
   ctx.save();
   ctx.scale(1.15, 1);
-  for (let r = 10; r < WIDTH * 0.7; r += 1.1) {
+  for (let r = 10; r < WIDTH * 0.5; r += 2) {
     let a = randomFloat(0, 2);
-    let lineWidth = randomFloat(1, 6);
+    let lineWidth = randomFloat(3, 10);
     while (a < 2) {
       const yellow = randomHue(50, 70, 1, 100, 70);
       const red = randomHue(320, 360, 1, 100, 70);
@@ -74,14 +76,20 @@ function paint(ctx: CanvasRenderingContext2D) {
   }
   ctx.restore();
 
-  const shape: Shape = [
-    [WIDTH * 0.2, HEIGHT * 0.45],
-    [WIDTH * 0.3, HEIGHT * 0.45],
-    [WIDTH * 0.3, HEIGHT * 0.65],
-    [WIDTH * 0.2, HEIGHT * 0.65],
+  const mountain: Shape = [
+    [-100, HEIGHT * 0.8],
+    [WIDTH + 50, HEIGHT * 0.8],
+    [WIDTH + 50, HEIGHT + 50],
+    [-100, HEIGHT + 50],
   ];
 
-  paintArea(ctx, shape, '#0000ff');
+  drawShape(ctx, distort2(distort2(mountain, 20), 5), { color: '#222' });
+
+  ctx.globalCompositeOperation = CanvasGlobalCompositionOperation.SCREEN;
+
+  for (let i = 0; i < 5; i++) {
+    hill(ctx, WIDTH, HEIGHT * 0.8, HEIGHT);
+  }
 }
 
 setTimeout(() => {
