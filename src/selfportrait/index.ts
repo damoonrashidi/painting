@@ -1,67 +1,77 @@
-import { init, random, randomHue, paintGrid } from '../lib';
-import { createStack } from './helpers';
+import { between, init, paintGrid, randomFloat } from '../lib';
+import { getColor, createDepthMap } from './helpers';
+const Simplex = require('perlin-simplex');
 
 const WIDTH = 2464;
 const HEIGHT = 3280;
-const STACK_WIDTH = 120;
-const STACK_HEIGHT = 120;
-
-const getColor = (
-  ref: CanvasRenderingContext2D,
-  x: number,
-  y: number
-): string => {
-  const { data } = ref.getImageData(x, y, STACK_WIDTH, STACK_HEIGHT);
-  let [aR, aG, aB, aA] = [0, 0, 0, 0];
-  for (let i = 0; i < data.length; i += 4) {
-    const [r, g, b, a] = data;
-    aR += r;
-    aG += g;
-    aB += b;
-    aA += a;
-  }
-
-  const n = data.length / 4;
-
-  return `rgba(${aR / n}, ${aG / n}, ${aB / n}, ${aA / n})`;
-};
 
 const paint = (
   ctx: CanvasRenderingContext2D,
-  ref: CanvasRenderingContext2D
+  ref: CanvasRenderingContext2D,
+  depth: CanvasRenderingContext2D
 ) => {
-  let x = 0;
-  let y = 0;
+  const simplex = new Simplex();
+  const w = 0.5;
 
-  const numberOfStacks = 8000;
-  for (let i = 0; i < numberOfStacks; i++) {
-    if (y >= STACK_HEIGHT * 200) {
-      x += STACK_WIDTH;
-      y = 0;
+  console.time('depthMap');
+  const depthMap = createDepthMap(depth, WIDTH, HEIGHT);
+  console.timeEnd('depthMap');
+
+  ctx.fillStyle = getColor(ref, x, y);
+
+  console.time('paint');
+  for (let i = 0; i < 5000; i++) {
+    let [x, y] = [randomFloat(0, WIDTH), randomFloat(0, HEIGHT)];
+
+    while (
+      between(x, 0, WIDTH) &&
+      between(y, 0, HEIGHT) &&
+      randomFloat() > 0.0001
+    ) {
+      const blackness = depthMap.get(`${x}:${y}`) || 0;
+      const coefficient = 100 + blackness * 20;
+      const n = simplex.noise(x / coefficient, y / coefficient);
+      x += Math.cos(n * Math.PI * 2);
+      y += Math.tan(n * Math.PI * 2);
+      ctx.fillRect(x, y, w, w);
     }
-    const color = getColor(ref, x, y);
-
-    if (i % 500 === 0) {
-      console.log(`at stack ${i} of ${numberOfStacks}`);
-    }
-
-    createStack(ctx, x, y, color, STACK_WIDTH, STACK_HEIGHT);
-    y += STACK_HEIGHT / 2 + 1;
   }
-  // paintGrid(ctx, WIDTH, HEIGHT);
+  console.timeEnd('paint');
 };
 
 setTimeout(() => {
-  const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fff';
+  console.clear();
+  let refLoaded = false;
+  let depthLoaded = false;
+
+  const ctx = init(WIDTH, HEIGHT, true);
   const ref = init(WIDTH, HEIGHT, false, 'reference-canvas');
+  const depth = init(WIDTH, HEIGHT, false, 'depth-canvas');
+
   (document.getElementById(
     'reference-canvas'
   ) as HTMLCanvasElement).style.display = 'none';
   const referenceImage = new Image();
   referenceImage.onload = () => {
     ref.drawImage(referenceImage, 0, 0, WIDTH, HEIGHT);
-    paint(ctx, ref);
+    refLoaded = true;
+
+    if (depthLoaded) {
+      paint(ctx, ref, depth);
+    }
   };
-  referenceImage.src = '/static/5a8472c3-ref.jpg';
+  referenceImage.src = '/static/ref.jpg';
+
+  (document.getElementById('depth-canvas') as HTMLCanvasElement).style.display =
+    'none';
+  const depthImage = new Image();
+  depthImage.onload = () => {
+    depthLoaded = true;
+
+    depth.drawImage(depthImage, 0, 0, WIDTH, HEIGHT);
+    if (refLoaded) {
+      paint(ctx, ref, depth);
+    }
+  };
+  depthImage.src = '/static/depth.jpg';
 });
