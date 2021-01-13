@@ -1,12 +1,12 @@
 import { init, randomHue, randomFloat, randomInt, Vector2D } from '../lib';
 import { Square, drawSquare, fillSquare, splitSquares, Split } from './helpers';
 
-const [WIDTH, HEIGHT] = [11811, 17717];
-// const [WIDTH, HEIGHT] = [2160, 3890];
-const PADDING_X = WIDTH / 10;
-const PADDING_Y = HEIGHT / 10;
+const [WIDTH, HEIGHT] = [10000, 10000];
+// const [WIDTH, HEIGHT] = [3000, 3000];
+const PADDING_X = -WIDTH / 2;
+const PADDING_Y = -HEIGHT / 2;
 
-function paint(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+function paint(ctx: CanvasRenderingContext2D): void {
   let squares: Square[] = [
     {
       x: PADDING_X,
@@ -21,6 +21,10 @@ function paint(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
    */
   ctx.fillStyle = '#fff';
   ctx.fillRect(150, 150, WIDTH - 300, HEIGHT - 300);
+
+  ctx.translate(WIDTH / 2, HEIGHT / 2);
+  ctx.rotate((45 * Math.PI) / 180);
+  ctx.translate(-WIDTH / 2, -HEIGHT / 2);
 
   /**
    * Create all the squares
@@ -48,5 +52,5 @@ setTimeout(() => {
   ctx.fillStyle = '#fff';
 
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  paint(ctx, canvas);
+  paint(ctx);
 });

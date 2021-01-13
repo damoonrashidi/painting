@@ -26,7 +26,7 @@ const paint = (
     while (
       between(x, 0, WIDTH) &&
       between(y, 0, HEIGHT) &&
-      randomFloat() > 0.0001
+      randomFloat() > 0.001
     ) {
       const blackness = depthMap.get(`${x}:${y}`) || 0;
       const coefficient = 100 + blackness * 20;

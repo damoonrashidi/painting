@@ -11,31 +11,20 @@ const stopY = HEIGHT - startY;
 function paint(ctx: CanvasRenderingContext2D) {
   const simplex = new Simplex();
 
-  const visited = new Set<string>();
-
-  // ctx.filter = 'blur(1px)';
-  for (let i = 0; i < 4.5e4; i++) {
+  for (let i = 0; i < 3e4; i++) {
     let [x, y] = [randomFloat(startX, stopX), randomFloat(startY, stopY)];
-    ctx.fillStyle = randomHue(x, y, 0.3, 90, 70);
+    const w = 0.5;
 
     while (
       between(x, startX, stopX) &&
       between(y, startY, stopY) &&
       randomFloat() > 0.001
     ) {
-      const n = simplex.noise(x / 3000, y / 3000);
+      ctx.fillStyle = randomHue(x, y, 0.5, 80, 70);
+      const n = simplex.noise(x / 5e3, y / 5e3);
       x += Math.cos(n * Math.PI * 2);
       y += Math.tan(n * Math.PI * 2);
-      // const key = `${x}:${y}`;
-      // if (visited.has(key)) {
-      //   break;
-      // }
-      // visited.add(key);
-      ctx.fillRect(x, y, 1, 1);
-      // ctx.beginPath();
-      // ctx.arc(x, y, 1, 0, Math.PI * 2);
-      // ctx.fill();
-      // ctx.closePath();
+      ctx.fillRect(x, y, w, w);
     }
   }
 }
@@ -43,7 +32,7 @@ function paint(ctx: CanvasRenderingContext2D) {
 setTimeout(() => {
   console.clear();
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#111';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 });
