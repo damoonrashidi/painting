@@ -170,5 +170,7 @@ export function distort2(
     const [x, y] = middle(points[i], points[i + 1] || points[0]);
     newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
   });
-  return iteration > 5 ? points : distort2(newPoints, jitter, iteration + 1);
+  return iteration > 5
+    ? points
+    : distort2(newPoints, jitter + 1, iteration + 1);
 }

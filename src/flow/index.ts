@@ -11,7 +11,7 @@ const stopY = HEIGHT - startY;
 function paint(ctx: CanvasRenderingContext2D) {
   const simplex = new Simplex();
 
-  for (let i = 0; i < 3e4; i++) {
+  for (let i = 0; i < 8e4; i++) {
     let [x, y] = [randomFloat(startX, stopX), randomFloat(startY, stopY)];
     const w = 0.5;
 
