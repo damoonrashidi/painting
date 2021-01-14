@@ -22,7 +22,31 @@
         box-shadow: 0 2px 32px 2px rgba(0, 0, 0, 0.05);
       }
     </style>
-    $bundles
+    <script type="text/javascript">
+
+      window.addEventListener('hashchange', () => {
+
+        const painting = location.hash.substr(1);
+        // document.body.innerHTML = '';
+        const script = document.createElement('script');
+        script.setAttribute('type', 'module');
+        script.setAttribute('src', `./${painting}/index.js`);
+        document.body.appendChild(script);
+      });
+
+      window.addEventListener('DOMContentLoaded', () => {
+        let painting = location.hash.substr(1);
+        if (painting === '') {
+          window.location.hash = '#piet';
+        }
+        const script = document.createElement('script');
+        script.setAttribute('type', 'module');
+        script.setAttribute('src', `./${painting}/index.js`);
+        document.body.appendChild(script);
+      });
+
+    </script>
   </head>
-  <body></body>
+  <body>
+  </body>
 </html>

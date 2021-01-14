@@ -30,8 +30,8 @@ export function createIntensityMap(
 ): Map<string, number> {
   const map = new Map<string, number>();
 
-  for (let y = 0; y < imageSuze; y += chunkSize) {
-    for (let x = 0; x < imageSuze; x += chunkSize) {}
+  for (let y = 0; y < imageSize; y += chunkSize) {
+    for (let x = 0; x < imageSize; x += chunkSize) {}
   }
 
   return map;

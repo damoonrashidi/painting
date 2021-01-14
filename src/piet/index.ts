@@ -1,8 +1,8 @@
 import { init, randomHue, randomFloat, randomInt, Vector2D } from '../lib';
 import { Square, drawSquare, fillSquare, splitSquares, Split } from './helpers';
 
-const [WIDTH, HEIGHT] = [10000, 10000];
-// const [WIDTH, HEIGHT] = [3000, 3000];
+// const [WIDTH, HEIGHT] = [10000, 10000];
+const [WIDTH, HEIGHT] = [3000, 3000];
 const PADDING_X = -WIDTH / 2;
 const PADDING_Y = -HEIGHT / 2;
 

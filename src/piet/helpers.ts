@@ -28,7 +28,7 @@ export function splitSquares(squares: Square[], [x, y]: Vector2D) {
   return copy;
 }
 
-const LINE_WIDTH = 75;
+const LINE_WIDTH = 15;
 
 export function drawSquare(
   ctx: CanvasRenderingContext2D,

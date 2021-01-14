@@ -4,17 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node fuse",
+    "start": "snowpack dev",
+    "build": "snowpack build",
     "new": "sh generate.sh"
   },
   "devDependencies": {
+    "@snowpack/plugin-typescript": "^1.2.0",
     "@types/node": "^12.6.2",
-    "fuse-box": "^3.6.0",
     "prettier": "^2.0.5",
+    "snowpack": "^3.0.6",
+    "tslib": "^2.1.0",
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "perlin-simplex": "^0.0.3",
+    "open-simplex-noise": "^2.4.0",
     "three": "^0.124.0",
     "three-orbitcontrols-ts": "^0.1.2"
   }

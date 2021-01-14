@@ -17,7 +17,7 @@ const paint = (
   const depthMap = createDepthMap(depth, WIDTH, HEIGHT);
   console.timeEnd('depthMap');
 
-  ctx.fillStyle = getColor(ref, x, y);
+  ctx.fillStyle = '#000'; //getColor(ref, x, y);
 
   console.time('paint');
   for (let i = 0; i < 5000; i++) {
