@@ -1,4 +1,4 @@
-import { randomFloat } from './helpers';
+import { randomInt } from './helpers';
 export default {
   bg: '#fffeee',
   main: '#b54c38',
@@ -11,4 +11,4 @@ export const randomHue = (
   saturation: number = 70,
   lightness: number = 60
 ): string =>
-  `hsla(${randomFloat(min, max)}, ${saturation}%, ${lightness}%, ${opacity})`;
+  `hsla(${randomInt(min, max)}, ${saturation}%, ${lightness}%, ${opacity})`;

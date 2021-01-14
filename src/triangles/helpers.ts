@@ -19,17 +19,17 @@ export const splitTriangle = (triangle: Triangle): Triangle[] => {
 
   const d = pointAlong(triangle.coords[b], triangle.coords[c]);
 
-  const color = randomHue(0, 300, 1, randomInt(60, 90), randomInt(50, 100));
+  const color = randomHue(0, 300, 1, randomInt(60, 90), randomInt(50, 80));
 
   return [
     {
       coords: [triangle.coords[a], [d[0], d[1]], triangle.coords[b]],
-      depth: triangle.depth - 1 - randomInt(0, 1),
+      depth: triangle.depth - 1 - randomInt(0, 10),
       color,
     },
     {
       coords: [triangle.coords[a], triangle.coords[c], [d[0], d[1]]],
-      depth: triangle.depth - 1 - randomInt(0, 1),
+      depth: triangle.depth - 1 - randomInt(0, 10),
       color,
     },
   ];
