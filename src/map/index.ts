@@ -1,10 +1,9 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
-import { init, randomFloat } from '../lib';
+// import { OrbitControls } from 'three-orbitcontrols-ts';
+import { init } from '../lib';
 import { getIntensity } from './helpers';
 
 const [WIDTH, HEIGHT] = [2160, 3890];
-const CUBE_SIZE = 80;
 const IMAGE_SIZE = 512;
 const SAMPLE_SIZE = 50;
 
@@ -60,7 +59,7 @@ function paint(
   camera.position.set(-IMAGE_SIZE / 2, 1500, -IMAGE_SIZE / 2);
   camera.lookAt(0, 200, 0);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  // const controls = new OrbitControls(camera, renderer.domElement);
 
   animate(scene, renderer, camera, plane);
 

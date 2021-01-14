@@ -1,14 +1,7 @@
-import {
-  init,
-  random,
-  paintGrid,
-  Vector2D,
-  randomHue,
-  randomInt,
-} from '../lib';
+import { init, randomFloat, randomHue, randomInt } from '../lib';
 
-const [WIDTH, HEIGHT] = [11811, 17717];
-// const [WIDTH, HEIGHT] = [2160, 3890];
+// const [WIDTH, HEIGHT] = [11811, 17717];
+const [WIDTH, HEIGHT] = [2160, 3890];
 const PADDING = WIDTH / 6;
 
 interface Column {
@@ -27,10 +20,9 @@ interface Segment {
 
 function getDotCount(y: number, area: number): number {
   const normalizedArea = parseInt(area.toString().substr(0, 4));
-  let count = (HEIGHT - y) * random(15, 18);
+  let count = (HEIGHT - y) * randomFloat(15, 18);
   count += normalizedArea;
-  const cappedCount = Math.min(5000, count);
-
+  const cappedCount = Math.min(4000, count);
   return cappedCount;
 }
 
@@ -39,15 +31,15 @@ function generateColumns(width: number, height: number): Column[] {
   const columns: Column[] = [];
   while (x < WIDTH) {
     let y = PADDING;
-    const columnWidth = random(10, 500, true);
+    const columnWidth = randomFloat(WIDTH * 0.005, WIDTH * 0.1);
     const segments: Segment[] = [];
     const columnHeight = HEIGHT - PADDING;
 
-    while (y < columnHeight) {
-      let segmentHeight = random(30, 250);
-      const isTall = random(0, 1, false) > 0.8;
+    while (y < columnHeight - PADDING) {
+      let segmentHeight = randomFloat(30, 250);
+      const isTall = randomFloat(0, 1) > 0.8;
       if (isTall) {
-        segmentHeight = random(200, 400);
+        segmentHeight = randomFloat(200, 400);
       }
       const dotCount = getDotCount(y, width * height);
       const segment: Segment = {
@@ -77,15 +69,15 @@ function generateColumns(width: number, height: number): Column[] {
 function drawSegment(ctx: CanvasRenderingContext2D, segment: Segment): void {
   const { x, y, width, height, dotCount } = segment;
 
-  ctx.fillStyle = randomHue(0, 0, 100, 0, randomInt(85, 95));
+  ctx.fillStyle = randomHue(0, 0, 100, 0, randomInt(0, 10));
   for (let i = 0; i < dotCount; i++) {
-    const dotX = random(x, x + width, false);
-    const dotY = random(y, y + height, false);
-    const r = random(0.1, 2, false);
-    ctx.beginPath();
-    ctx.arc(dotX, dotY, r, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
+    const dotX = randomFloat(x, x + width);
+    const dotY = randomFloat(y, y + height);
+    const r = randomFloat(0.1, 2);
+    // ctx.beginPath();
+    // ctx.arc(dotX, dotY, r, 0, Math.PI * 2);
+    // ctx.closePath();
+    ctx.fillRect(dotX, dotY, r, r);
   }
 }
 
@@ -96,13 +88,13 @@ const paint = (ctx: CanvasRenderingContext2D) => {
     segments.forEach(segment => drawSegment(ctx, segment));
   });
 
-  ctx.fillStyle = '#111';
+  ctx.fillStyle = '#fff';
   ctx.fillRect(WIDTH - PADDING, 0, PADDING, HEIGHT);
 };
 
 setTimeout(() => {
   const ctx = init(WIDTH, HEIGHT);
-  ctx.fillStyle = '#111';
+  ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   paint(ctx);
 }, 0);

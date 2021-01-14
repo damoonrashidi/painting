@@ -1,26 +1,17 @@
-import {
-  init,
-  random,
-  middle,
-  pointAlong,
-  between,
-  Vector2D,
-  paintGrid,
-} from '../lib';
+import { init, randomFloat, Vector2D } from '../lib';
 const WIDTH = 2160;
 const HEIGHT = 3860;
 
 function makeTree([startX, startY]: Vector2D, treeHeight: number): Vector2D[] {
   const trunkWidth: number = 50;
-  const branches: Vector2D[][] = [];
   const tree: Vector2D[] = Array(1200)
     .fill(false)
     .map(() => {
-      const y = random(startY, startY + treeHeight);
+      const y = randomFloat(startY, startY + treeHeight);
       const topRatio = 1 - y / startY;
       const minX = startX - topRatio * trunkWidth;
       const maxX = startX + topRatio * trunkWidth;
-      const x = random(minX, maxX);
+      const x = randomFloat(minX, maxX);
       return [x, y];
     });
 
@@ -31,11 +22,11 @@ function makeTree([startX, startY]: Vector2D, treeHeight: number): Vector2D[] {
   ) {
     for (let b = 0; b < 1000; b++) {
       const topRatio = 1 - branchY / startY;
-      const branchWidth = (topRatio * branchY) / 4 + random(50, 1000);
+      const branchWidth = (topRatio * branchY) / 4 + randomFloat(50, 1000);
       const minX = startX - topRatio * branchWidth;
       const maxX = startX + topRatio * branchWidth;
-      const y = random(branchY - 10, branchY + 10);
-      const x = random(minX, maxX);
+      const y = randomFloat(branchY - 10, branchY + 10);
+      const x = randomFloat(minX, maxX);
       const point: Vector2D = [x, y];
       tree.push(point);
     }
@@ -47,7 +38,7 @@ function makeTree([startX, startY]: Vector2D, treeHeight: number): Vector2D[] {
 function paintTree(ctx: CanvasRenderingContext2D, tree: Vector2D[]) {
   tree.forEach(([x, y]) => {
     ctx.beginPath();
-    ctx.arc(x, y, random(0.5, 1.5, false), 0, Math.PI * 2);
+    ctx.arc(x, y, randomFloat(0.5, 1.5), 0, Math.PI * 2);
     ctx.closePath();
     ctx.fillStyle = '#222';
     ctx.fill();
@@ -55,10 +46,10 @@ function paintTree(ctx: CanvasRenderingContext2D, tree: Vector2D[]) {
 }
 
 function createSnow(ctx: CanvasRenderingContext2D): void {
-  const w = random(200, 800);
-  const h = random(200, 500);
-  const x = random(0, WIDTH - w);
-  const y = random(3088, HEIGHT);
+  const w = randomFloat(200, 800);
+  const h = randomFloat(200, 500);
+  const x = randomFloat(0, WIDTH - w);
+  const y = randomFloat(3088, HEIGHT);
 
   ctx.save();
   ctx.beginPath();
@@ -77,15 +68,18 @@ const paint = (ctx: CanvasRenderingContext2D) => {
   // paintGrid(ctx, WIDTH, HEIGHT, { showNumbers: true });
 
   for (let i = 0; i < 10; i++) {
-    const [x, y] = [random(0, WIDTH), random(HEIGHT - 1300, HEIGHT - 1100)];
+    const [x, y] = [
+      randomFloat(0, WIDTH),
+      randomFloat(HEIGHT - 1300, HEIGHT - 1100),
+    ];
 
     const tree = makeTree([x, y], 1000);
     paintTree(ctx, tree);
   }
 
-  // for (let i = 0; i < 60; i++) {
-  //   createSnow(ctx);
-  // }
+  for (let i = 0; i < 10; i++) {
+    createSnow(ctx);
+  }
 };
 
 setTimeout(() => {

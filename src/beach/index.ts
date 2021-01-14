@@ -1,16 +1,12 @@
 import {
-  init,
-  Vector2D,
-  distort2,
-  Shape,
-  randomFloat,
-  randomInt,
-  randomHue,
   drawShape,
-  CanvasGlobalCompositionOperation,
+  init,
+  randomFloat,
+  randomHue,
+  randomInt,
+  Shape,
 } from '../lib';
-
-import { Stripe, Segment, createPath } from './helpers';
+import { createPath } from './helpers';
 
 // const [WIDTH, HEIGHT] = [11811, 17717];
 const [WIDTH, HEIGHT] = [2160, 3860];
@@ -20,7 +16,6 @@ const Padding = {
 };
 const TOP = Padding.Y;
 const BOTTOM = HEIGHT - Padding.Y;
-const DISTORT_OPTION = 0.5;
 
 enum Colors {
   STRIPE = '#f2e8ae',
@@ -35,7 +30,6 @@ enum Colors {
 const paint = (ctx: CanvasRenderingContext2D) => {
   const stripeWidth = WIDTH / 80;
   const stripePadding = stripeWidth / 2;
-  const stripesCount = stripeWidth + (stripePadding * 2) / WIDTH;
 
   for (
     let x = Padding.X;

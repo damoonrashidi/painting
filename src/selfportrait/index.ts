@@ -1,6 +1,5 @@
-import { between, init, paintGrid, randomFloat } from '../lib';
-import { getColor, createDepthMap } from './helpers';
-const Simplex = require('perlin-simplex');
+import { between, init, randomFloat } from '../lib';
+import { createDepthMap } from './helpers';
 
 const WIDTH = 2464;
 const HEIGHT = 3280;
@@ -10,11 +9,12 @@ const paint = (
   ref: CanvasRenderingContext2D,
   depth: CanvasRenderingContext2D
 ) => {
-  const simplex = new Simplex();
   const w = 0.5;
 
+  console.log(ref);
+
   console.time('depthMap');
-  const depthMap = createDepthMap(depth, WIDTH, HEIGHT);
+  const depthMap = createDepthMap(depth);
   console.timeEnd('depthMap');
 
   ctx.fillStyle = '#000'; //getColor(ref, x, y);
@@ -30,7 +30,7 @@ const paint = (
     ) {
       const blackness = depthMap.get(`${x}:${y}`) || 0;
       const coefficient = 100 + blackness * 20;
-      const n = simplex.noise(x / coefficient, y / coefficient);
+      const n = 1 / coefficient;
       x += Math.cos(n * Math.PI * 2);
       y += Math.tan(n * Math.PI * 2);
       ctx.fillRect(x, y, w, w);

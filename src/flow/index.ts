@@ -21,7 +21,7 @@ function paint(ctx: CanvasRenderingContext2D) {
       randomFloat() > 0.001
     ) {
       ctx.fillStyle = randomHue(x, y, 0.5, 80, 70);
-      const n = noise2d(x / 1.2e2, y / 1.2e2);
+      const n = noise2d(x / 4e2, y / 4e2);
       x += Math.cos(n * Math.PI * 2);
       y += Math.tan(n * Math.PI * 2);
       ctx.fillRect(x, y, w, w);

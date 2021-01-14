@@ -1,9 +1,3 @@
-export function random(min: number = 0, max: number = 100, rounded = true) {
-  return rounded
-    ? Math.floor(Math.random() * (max - min) + min)
-    : Math.random() * (max - min) + min;
-}
-
 export function randomInt(min: number = 0, max: number = 100) {
   return Math.round(Math.random() * (max - min) + min);
 }
@@ -151,7 +145,7 @@ export function distort({
   const WIDTH = coords[1][0];
   for (let i = 1; i < segments; i++) {
     const x = (i * WIDTH) / segments;
-    const y = distorted[i - 1][1] + random(-jitter, jitter) * Math.sin(i);
+    const y = distorted[i - 1][1] + randomFloat(-jitter, jitter) * Math.sin(i);
     distorted.push([x, y]);
   }
   distorted.push([WIDTH, height]);
@@ -168,7 +162,10 @@ export function distort2(
   points.forEach((point, i) => {
     newPoints.push(point);
     const [x, y] = middle(points[i], points[i + 1] || points[0]);
-    newPoints.push([x + random(-jitter, jitter), y + random(-jitter, jitter)]);
+    newPoints.push([
+      x + randomFloat(-jitter, jitter),
+      y + randomFloat(-jitter, jitter),
+    ]);
   });
   return iteration > 5
     ? points

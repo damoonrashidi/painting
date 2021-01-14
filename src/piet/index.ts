@@ -1,5 +1,5 @@
-import { init, randomHue, randomFloat, randomInt, Vector2D } from '../lib';
-import { Square, drawSquare, fillSquare, splitSquares, Split } from './helpers';
+import { init, randomFloat, Vector2D } from '../lib';
+import { drawSquare, fillSquare, splitSquares, Square } from './helpers';
 
 // const [WIDTH, HEIGHT] = [10000, 10000];
 const [WIDTH, HEIGHT] = [3000, 3000];
@@ -29,8 +29,6 @@ function paint(ctx: CanvasRenderingContext2D): void {
   /**
    * Create all the squares
    */
-
-  const points: Vector2D[] = [];
 
   for (let i = 0; i < 30; i++) {
     const point: Vector2D = [

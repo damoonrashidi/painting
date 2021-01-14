@@ -36,9 +36,7 @@ export const getDepth = (
 };
 
 export function createDepthMap(
-  ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number
+  ctx: CanvasRenderingContext2D
 ): Map<string, number> {
   const map = new Map<string, number>();
 

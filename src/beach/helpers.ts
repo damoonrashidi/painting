@@ -1,4 +1,4 @@
-import { Vector2D, distort2, Shape } from '../lib';
+import { distort2, Shape } from '../lib';
 
 export interface Segment {
   shape: Shape;

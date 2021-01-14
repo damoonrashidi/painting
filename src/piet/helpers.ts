@@ -1,4 +1,4 @@
-import { init, randomHue, randomFloat, randomInt, Vector2D } from '../lib';
+import { randomInt, Vector2D } from '../lib';
 
 export interface Square {
   x: number;

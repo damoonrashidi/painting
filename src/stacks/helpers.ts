@@ -1,5 +1,3 @@
-import { randomHue } from './colors';
-
 export function init(width: number, height: number): CanvasRenderingContext2D {
   document.body.innerHTML = '';
   const canvas: HTMLCanvasElement = document.createElement('canvas');

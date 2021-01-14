@@ -6,13 +6,12 @@ export function getIntensity(
 ): number {
   try {
     const { data } = ref.getImageData(x, y, cubeWidth, cubeWidth);
-    let [r, g, b, a] = [0, 0, 0, 0];
+    let [r, g, b] = [0, 0, 0];
     for (let i = 0; i < data.length; i += 4) {
-      const [_r, _g, _b, _a] = data;
+      const [_r, _g, _b] = data.slice(i, i + 4);
       r += _r;
       g += _g;
       b += _b;
-      a += _a;
     }
 
     const n = data.length / 4;
@@ -24,7 +23,7 @@ export function getIntensity(
 }
 
 export function createIntensityMap(
-  ref: CanvasRenderingContext2D,
+  _: CanvasRenderingContext2D,
   imageSize: number,
   chunkSize: number
 ): Map<string, number> {
