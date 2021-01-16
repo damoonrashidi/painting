@@ -27,6 +27,13 @@ export interface Line {
 export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 export const average = (a: number, b: number) => (a + b) / 2;
+export const map = (
+  value: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): number => ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 
 export enum CanvasGlobalCompositionOperation {
   SOURCE_IN = 'source-in',

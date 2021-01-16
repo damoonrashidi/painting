@@ -47,7 +47,7 @@ export function drawTriangle(
 ): void {
   ctx.fillStyle = triangle.color;
   const r = randomFloat(0.5, 1.5);
-  const dotCount = area(triangle) / 10;
+  const dotCount = area(triangle) / 3;
 
   for (let i = 0; i < dotCount; i++) {
     const [x, y] = randomPointInTriangle(triangle.coords);

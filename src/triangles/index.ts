@@ -1,39 +1,38 @@
 import { init, randomFloat, Vector2D, randomInt } from '../lib';
-import { drawTriangle2, splitTriangle, Triangle } from './helpers';
+import { drawTriangle, splitTriangle, Triangle } from './helpers';
 
 // const [WIDTH, HEIGHT] = [4.5e3, 8e3];
-const [WIDTH, HEIGHT] = [2000, 2000];
+const [WIDTH, HEIGHT] = [8e3, 4e3];
 
 const paint = (ctx: CanvasRenderingContext2D) => {
   const roots: Triangle[] = [];
 
-  const PADDING = WIDTH * 0.1;
-  const w = WIDTH * 0.2;
-  const h = HEIGHT * 0.2;
+  const PADDING = WIDTH * 0.05;
+  const w = WIDTH * 0.12;
+  const h = HEIGHT - PADDING * 2;
 
-  for (let y = PADDING; y < HEIGHT - PADDING; y += h + PADDING) {
-    for (let x = PADDING; x < WIDTH - PADDING; x += w + PADDING) {
-      const triangle1 = {
-        coords: [
-          [x, y],
-          [x + w, y],
-          [x, y + h],
-        ] as [Vector2D, Vector2D, Vector2D],
-        depth: randomInt(10, 20),
-        color: '#fff',
-      };
+  const y = PADDING;
+  for (let x = PADDING; x < WIDTH - PADDING * 2; x += w + PADDING) {
+    const triangle1 = {
+      coords: [
+        [x, y],
+        [x + w, y],
+        [x, y + h],
+      ] as [Vector2D, Vector2D, Vector2D],
+      depth: randomInt(10, 20),
+      color: '#fff',
+    };
 
-      const triangle2 = {
-        coords: [
-          [x + w, y],
-          [x, y + h],
-          [x + w, y + h],
-        ] as [Vector2D, Vector2D, Vector2D],
-        depth: randomInt(10, 20),
-        color: '#fff',
-      };
-      roots.push(triangle1, triangle2);
-    }
+    const triangle2 = {
+      coords: [
+        [x + w, y],
+        [x, y + h],
+        [x + w, y + h],
+      ] as [Vector2D, Vector2D, Vector2D],
+      depth: randomInt(10, 20),
+      color: '#fff',
+    };
+    roots.push(triangle1, triangle2);
   }
 
   roots.forEach(rootTriangle => {
@@ -49,7 +48,7 @@ const paint = (ctx: CanvasRenderingContext2D) => {
         }
       }
     }
-    triangles.forEach(triangle => drawTriangle2(ctx, triangle));
+    triangles.forEach(triangle => drawTriangle(ctx, triangle));
   });
 };
 
