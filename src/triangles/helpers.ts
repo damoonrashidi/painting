@@ -19,17 +19,23 @@ export const splitTriangle = (triangle: Triangle): Triangle[] => {
 
   const d = pointAlong(triangle.coords[b], triangle.coords[c]);
 
-  const color = randomHue(0, 300, 1, randomInt(60, 90), randomInt(50, 80));
+  const color = randomHue(
+    0,
+    360,
+    randomFloat(0.5, 1),
+    randomInt(60, 80),
+    randomInt(50, 70)
+  );
 
   return [
     {
       coords: [triangle.coords[a], [d[0], d[1]], triangle.coords[b]],
-      depth: triangle.depth - 1 - randomInt(0, 10),
+      depth: triangle.depth - randomInt(1, 3),
       color,
     },
     {
       coords: [triangle.coords[a], triangle.coords[c], [d[0], d[1]]],
-      depth: triangle.depth - 1 - randomInt(0, 10),
+      depth: triangle.depth - randomInt(1, 3),
       color,
     },
   ];
@@ -39,22 +45,31 @@ export function drawTriangle(
   ctx: CanvasRenderingContext2D,
   triangle: Triangle
 ): void {
-  ctx.moveTo(...triangle.coords[0]);
-  for (const line of triangle.coords) {
-    ctx.lineTo(...line);
-  }
-  ctx.lineTo(...triangle.coords[0]);
-  ctx.closePath();
-
   ctx.fillStyle = triangle.color;
   const r = randomFloat(0.5, 1.5);
-
   const dotCount = area(triangle) / 10;
 
   for (let i = 0; i < dotCount; i++) {
     const [x, y] = randomPointInTriangle(triangle.coords);
     ctx.fillRect(x, y, r, r);
   }
+}
+
+export function drawTriangle2(
+  ctx: CanvasRenderingContext2D,
+  { coords }: Triangle
+): void {
+  ctx.lineCap = 'square';
+  ctx.strokeStyle = '#000';
+  ctx.beginPath();
+  ctx.lineWidth = 3;
+  ctx.moveTo(...coords[0]);
+  for (const line of coords) {
+    ctx.lineTo(...line);
+  }
+  ctx.closePath();
+  ctx.stroke();
+  // ctx.fill();
 }
 
 function randomPointInTriangle(coords: Triangle['coords']): Vector2D {
