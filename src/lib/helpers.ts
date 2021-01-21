@@ -24,6 +24,12 @@ export interface Line {
   height: number;
 }
 
+export const distance = ([x1, y1]: Vector2D, [x2, y2]: Vector2D): number => {
+  const x = Math.abs(x1 - x2);
+  const y = Math.abs(y1 - y2);
+
+  return Math.sqrt(x ** 2 + y ** 2);
+};
 export const fib = (n: number): number => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 export const between = (a: number, b: number, c: number) => a >= b && a <= c;
 export const average = (a: number, b: number) => (a + b) / 2;

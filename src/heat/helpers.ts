@@ -44,9 +44,9 @@ export function nextGeneration(map: HeatMap): HeatMap {
   for (let y = 0; y < map.length; y++) {
     next[y] = map[y];
     for (let x = 0; x < map[y].length; x++) {
-      const neighbours = getAdjacent(x, y, map);
+      // const neighbours = getAdjacent(x, y, map);
 
-      const average = neighbours.reduce((a, b) => a + b, 0) / 9;
+      // const average = neighbours.reduce((a, b) => a + b, 0) / 9;
 
       next[y][x] -= 0.01;
     }
