@@ -1,5 +1,7 @@
 import { makeNoise2D, Noise2D } from 'open-simplex-noise';
 import {
+  Circle,
+  distance,
   distort2,
   drawShape,
   isInsideCircle,
@@ -7,6 +9,7 @@ import {
   randomHue,
   randomInt,
   Shape,
+  Vector2D,
 } from '../lib';
 
 function drawLine(
@@ -136,9 +139,7 @@ export function drawSea(
 
 export function drawMoon(
   ctx: CanvasRenderingContext2D,
-  centerX: number,
-  centerY: number,
-  radius: number
+  { centerX, centerY, radius }: Circle
 ): void {
   const noise = makeNoise2D(Date.now());
 
@@ -203,4 +204,64 @@ export function drawMountain(
   gradient.addColorStop(1, '#11111100');
 
   drawShape(ctx, mountain, { color: gradient });
+}
+
+export function drawWind(
+  ctx: CanvasRenderingContext2D,
+  moons: Circle[],
+  [minX, maxX]: Vector2D,
+  [minY, maxY]: Vector2D
+): void {
+  const seed = 1611342057928;
+  const skyNoise = makeNoise2D(seed);
+
+  for (let i = 0; i < 5e3; i++) {
+    let [x, y] = [randomFloat(minX, maxX), randomFloat(minY, maxY)];
+
+    let draw = true;
+    for (let i = 0; i < moons.length; i++) {
+      const moon = moons[i];
+      if (
+        distance([x, y], [moon.centerX, moon.centerY]) <
+        moon.radius + moon.radius / 2
+      ) {
+        draw = false;
+      }
+    }
+
+    if (!draw) {
+      continue;
+    }
+
+    const length = randomFloat(200, maxX - x);
+    let traveled = 0;
+    ctx.fillStyle = randomHue(
+      200,
+      240,
+      randomFloat(0.3, 0.8),
+      randomInt(30, 100),
+      randomInt(20, 100)
+    );
+
+    while (traveled < length) {
+      const n = skyNoise(x / 600, y / 600);
+
+      moons.forEach(moon => {
+        const tooClose =
+          distance([x, y], [moon.centerX, moon.centerY]) <
+          moon.radius + moon.radius / 2;
+        const isOnUpperHalf = y < moon.centerY;
+
+        if (tooClose) {
+          y = isOnUpperHalf ? y - 5 : y + 5;
+        } else {
+          y += Math.sin(n);
+          x += Math.cos(n);
+        }
+      });
+      ctx.fillRect(x, y, 1, 1);
+
+      traveled++;
+    }
+  }
 }
