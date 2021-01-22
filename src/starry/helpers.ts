@@ -1,5 +1,13 @@
 import { makeNoise2D, Noise2D } from 'open-simplex-noise';
-import { insideCircle, randomFloat, randomHue, randomInt, Shape } from '../lib';
+import {
+  distort2,
+  drawShape,
+  isInsideCircle,
+  randomFloat,
+  randomHue,
+  randomInt,
+  Shape,
+} from '../lib';
 
 function drawLine(
   ctx: CanvasRenderingContext2D,
@@ -14,8 +22,8 @@ function drawLine(
 
   const length = randomFloat(minLength, maxLength);
   let r = randomInt(0.5, 1);
-
   let traveled = 0;
+
   while (traveled < length) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, r, r);
@@ -126,46 +134,73 @@ export function drawSea(
   }
 }
 
+export function drawMoon(
+  ctx: CanvasRenderingContext2D,
+  centerX: number,
+  centerY: number,
+  radius: number
+): void {
+  const noise = makeNoise2D(Date.now());
+
+  for (
+    let startY = centerY - radius;
+    startY < centerY + radius * 2;
+    startY += 1
+  ) {
+    let x = centerX - radius;
+    let y = startY - radius;
+
+    ctx.fillStyle = randomHue(40, 80, 70, 70);
+    while (x < centerX + radius) {
+      if (isInsideCircle([x, y], { centerX, centerY, radius })) {
+        ctx.fillRect(x, y, 4, 4);
+      }
+      const n = noise(x / 150, y / 150);
+      x += Math.cos(n);
+      y += Math.sin(n);
+    }
+  }
+}
+
 export function drawMoon2(
   ctx: CanvasRenderingContext2D,
   centerX: number,
   centerY: number,
-  r: number
+  radius: number
 ): void {
   const noise = makeNoise2D(Date.now());
 
-  const density = r ** 2 / 2;
+  const density = radius ** 2 / 2;
   for (let i = 0; i < density; i++) {
-    const x = randomFloat(centerX - r, centerX + r);
-    const y = randomFloat(centerY - r, centerY + r);
+    const x = randomFloat(centerX - radius, centerX + radius);
+    const y = randomFloat(centerY - radius, centerY + radius);
 
-    if (insideCircle(x, y, centerX, centerY, r)) {
-      ctx.fillStyle = randomHue(0, 70 * noise(x / 400, y / 400), 70, 70);
+    if (isInsideCircle([x, y], { centerX, centerY, radius })) {
+      ctx.fillStyle = randomHue(50, 80 * noise(x / 400, y / 400), 70, 70);
       ctx.fillRect(x, y, 3, 3);
     }
   }
 }
 
-export function drawMoon(
+export function drawMountain(
   ctx: CanvasRenderingContext2D,
-  centerX: number,
-  centerY: number,
-  r: number
+  minX: number,
+  maxX: number,
+  startY: number,
+  stopY: number
 ): void {
-  const noise = makeNoise2D(Date.now());
+  let mountain: Shape = [
+    [minX, stopY],
+    [(maxX + minX) / 2, startY],
+    [maxX, stopY],
+    [minX, stopY],
+  ];
 
-  for (let startY = centerY - r; startY < centerY + r * 2; startY += 1) {
-    let x = centerX - r;
-    let y = startY - r;
+  mountain = distort2(mountain, 4);
 
-    ctx.fillStyle = randomHue(0, 50, 70, 70);
-    while (x < centerX + r) {
-      if (insideCircle(x, y, centerX, centerY, r)) {
-        ctx.fillRect(x, y, 4, 4);
-      }
-      const n = noise(x / 300, y / 300);
-      x += Math.cos(n);
-      y += Math.sin(n);
-    }
-  }
+  const gradient = ctx.createLinearGradient(0, startY, 0, stopY);
+  gradient.addColorStop(0, '#111111');
+  gradient.addColorStop(1, '#11111100');
+
+  drawShape(ctx, mountain, { color: gradient });
 }

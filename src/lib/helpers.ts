@@ -8,6 +8,11 @@ export function randomFloat(min: number = 0, max: number = 1) {
 
 export type Vector2D = [number, number];
 export type Shape = Vector2D[];
+export interface Circle {
+  centerX: number;
+  centerY: number;
+  radius: number;
+}
 
 interface DistortOptions {
   coords: number[][];
@@ -40,12 +45,9 @@ export const map = (
   x2: number,
   y2: number
 ): number => ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
-export const insideCircle = (
-  x: number,
-  y: number,
-  centerX: number,
-  centerY: number,
-  radius: number
+export const isInsideCircle = (
+  [x, y]: Vector2D,
+  { centerX, centerY, radius }: Circle
 ) => (x - centerX) ** 2 + (y - centerY) ** 2 <= radius ** 2;
 
 export enum CanvasGlobalCompositionOperation {
@@ -140,7 +142,7 @@ export function pointAlong([x1, y1]: Vector2D, [x2, y2]: Vector2D): Vector2D {
 export function drawShape(
   ctx: CanvasRenderingContext2D,
   shape: Vector2D[],
-  { color, outline }: { color: string; outline?: boolean }
+  { color, outline }: { color: string | CanvasGradient; outline?: boolean }
 ) {
   ctx.beginPath();
   ctx.moveTo(...shape[0]);
