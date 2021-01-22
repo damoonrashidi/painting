@@ -40,6 +40,13 @@ export const map = (
   x2: number,
   y2: number
 ): number => ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
+export const insideCircle = (
+  x: number,
+  y: number,
+  centerX: number,
+  centerY: number,
+  radius: number
+) => (x - centerX) ** 2 + (y - centerY) ** 2 <= radius ** 2;
 
 export enum CanvasGlobalCompositionOperation {
   SOURCE_IN = 'source-in',

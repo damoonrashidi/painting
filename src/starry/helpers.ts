@@ -1,5 +1,5 @@
-import { Noise2D, makeNoise2D } from 'open-simplex-noise';
-import { Shape, randomFloat, randomHue, randomInt } from '../lib';
+import { makeNoise2D, Noise2D } from 'open-simplex-noise';
+import { insideCircle, randomFloat, randomHue, randomInt, Shape } from '../lib';
 
 function drawLine(
   ctx: CanvasRenderingContext2D,
@@ -13,7 +13,7 @@ function drawLine(
   let [x, y] = [randomFloat(minX, maxX), randomFloat(minY, maxY)];
 
   const length = randomFloat(minLength, maxLength);
-  let r = randomInt(0.5, 0.5);
+  let r = randomInt(0.5, 1);
 
   let traveled = 0;
   while (traveled < length) {
@@ -126,43 +126,46 @@ export function drawSea(
   }
 }
 
+export function drawMoon2(
+  ctx: CanvasRenderingContext2D,
+  centerX: number,
+  centerY: number,
+  r: number
+): void {
+  const noise = makeNoise2D(Date.now());
+
+  const density = r ** 2 / 2;
+  for (let i = 0; i < density; i++) {
+    const x = randomFloat(centerX - r, centerX + r);
+    const y = randomFloat(centerY - r, centerY + r);
+
+    if (insideCircle(x, y, centerX, centerY, r)) {
+      ctx.fillStyle = randomHue(0, 70 * noise(x / 400, y / 400), 70, 70);
+      ctx.fillRect(x, y, 3, 3);
+    }
+  }
+}
+
 export function drawMoon(
   ctx: CanvasRenderingContext2D,
   centerX: number,
   centerY: number,
   r: number
 ): void {
-  // const noise = makeNoise2D(10);
   const noise = makeNoise2D(Date.now());
 
-  ctx.save();
-  ctx.fillStyle = randomHue(0, 50, 70, 70);
-  ctx.filter = 'blur(500px)';
-  ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  const inside = (x: number, y: number) =>
-    (x - centerX) ** 2 + (y - centerY) ** 2 <= r ** 2;
-
-  for (let startY = centerY - r; startY < centerY + r * 2; startY += 0.5) {
+  for (let startY = centerY - r; startY < centerY + r * 2; startY += 1) {
     let x = centerX - r;
     let y = startY - r;
 
     ctx.fillStyle = randomHue(0, 50, 70, 70);
     while (x < centerX + r) {
-      if (inside(x, y)) {
+      if (insideCircle(x, y, centerX, centerY, r)) {
         ctx.fillRect(x, y, 4, 4);
       }
-      const n = noise(x / 100, y / 100);
+      const n = noise(x / 300, y / 300);
       x += Math.cos(n);
       y += Math.sin(n);
     }
   }
 }
-
-export function drawHill(
-  ctx: CanvasRenderingContext2D,
-  [startX, stopX]: [number, number],
-  [startY, stopY]: [number, number]
-) {}
