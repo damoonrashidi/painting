@@ -15,7 +15,7 @@ export interface Circle {
 }
 
 interface DistortOptions {
-  coords: number[][];
+  coords: Shape;
   jitter: number;
   segments: number;
   height: number;
@@ -28,6 +28,11 @@ export interface Line {
   width: number;
   height: number;
 }
+
+export const fromPalette = (colors: string[]): string => {
+  const i = randomInt(0, colors.length - 1);
+  return colors[i];
+};
 
 export const distance = ([x1, y1]: Vector2D, [x2, y2]: Vector2D): number => {
   const x = Math.abs(x1 - x2);
@@ -161,17 +166,20 @@ export function distort({
   coords,
   jitter,
   segments,
-  height,
 }: DistortOptions): Vector2D[] {
-  const distorted: Vector2D[] = [];
-  const WIDTH = coords[1][0];
+  let distorted: Shape = [coords[0]];
+  console.log(coords);
+  const WIDTH = coords[1][0] - coords[0][0];
   for (let i = 1; i < segments; i++) {
     const x = (i * WIDTH) / segments;
-    const y = distorted[i - 1][1] + randomFloat(-jitter, jitter) * Math.sin(i);
+    const alpha =
+      distorted[i - 1][1] + randomFloat(-jitter, jitter) * Math.sin(i);
+
+    const y = alpha < coords[0][1] ? alpha : coords[0][1];
     distorted.push([x, y]);
   }
-  distorted.push([WIDTH, height]);
-  distorted.push([0, height]);
+  distorted.push(coords[1]);
+  distorted.push([coords[0][0], coords[1][1]]);
   return distorted;
 }
 
