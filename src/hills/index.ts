@@ -1,4 +1,4 @@
-import { init, distort, fib, randomHue } from '../lib';
+import { Shape, init, distort, fib, randomHue } from '../lib';
 const [WIDTH, HEIGHT] = [1200, 1600];
 let ctx: CanvasRenderingContext2D;
 
@@ -77,7 +77,7 @@ function drawCircle(options: CircleOptions) {
 
 const mountain = ({ height, color }: MountainOptions) => {
   ctx.beginPath();
-  let coords = [
+  let coords: Shape = [
     [0, HEIGHT - height],
     [WIDTH, HEIGHT - height - 100],
   ];
