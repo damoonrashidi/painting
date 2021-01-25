@@ -13,9 +13,9 @@ function paint(ctx: CanvasRenderingContext2D) {
 
   drawStars(ctx, [0, WIDTH], [0, HEIGHT * 0.6], '#ffffff99');
   drawSea(ctx, [-100, WIDTH], [HEIGHT * 0.7, HEIGHT]);
-  drawWind(ctx, moons, [0, WIDTH], [0, HEIGHT * 0.6]);
   const moonSeed = 1611431044274;
   moons.forEach(moon => drawMoon(ctx, moon, moonSeed));
+  drawWind(ctx, moons, [0, WIDTH], [0, HEIGHT * 0.6]);
 }
 
 setTimeout(() => {

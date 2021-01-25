@@ -141,7 +141,6 @@ export function drawMoon(
   { centerX, centerY, radius }: Circle,
   seed: number
 ): void {
-  console.log(seed);
   const noise = makeNoise2D(seed);
 
   for (
@@ -201,7 +200,8 @@ export function drawWind(
   [minX, maxX]: Vector2D,
   [minY, maxY]: Vector2D
 ): void {
-  const seed = 1611342057928;
+  // const seed = 1611342057928;
+  const seed = Date.now();
   const skyNoise = makeNoise2D(seed);
 
   for (let i = 0; i < 8e3; i++) {
@@ -244,7 +244,7 @@ export function drawWind(
 
         if (tooClose) {
           y = isOnUpperHalf ? y - 5 : y + 5;
-          x -= Math.cos(x);
+          x -= 3;
         } else {
           y += Math.sin(n);
           x += Math.cos(n);
