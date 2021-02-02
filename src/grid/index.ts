@@ -1,6 +1,6 @@
 import { init, randomFloat, randomHue, randomInt } from '../lib';
 
-const [WIDTH, HEIGHT] = [4e3, 8e3];
+const [WIDTH, HEIGHT] = [4e3 * 0.7, 8e3 * 0.7];
 const PADDING = WIDTH / 7;
 
 interface Column {
@@ -17,8 +17,8 @@ interface Segment {
   dotCount: number;
 }
 
-function getDotCount(y: number, area: number): number {
-  return area / randomInt(1e4, 3e4);
+function getDotCount(area: number): number {
+  return area / randomInt(1.5e4, 2.5e4);
 }
 
 function generateColumns(width: number, height: number): Column[] {
@@ -31,12 +31,12 @@ function generateColumns(width: number, height: number): Column[] {
     const columnHeight = HEIGHT - PADDING;
 
     while (y < columnHeight - PADDING) {
-      let segmentHeight = HEIGHT * randomFloat(0.005, 0.01);
+      let segmentHeight = HEIGHT * randomFloat(0.002, 0.01);
       const isTall = randomFloat(0, 1) > 0.8;
       if (isTall) {
-        segmentHeight = HEIGHT * randomFloat(0.01, 0.03);
+        segmentHeight = HEIGHT * randomFloat(0.01, 0.05);
       }
-      const dotCount = getDotCount(y, width * height);
+      const dotCount = getDotCount(width * height);
       const segment: Segment = {
         x,
         y,
